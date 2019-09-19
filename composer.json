@@ -1,0 +1,23 @@
+{
+    "name": "mario-deluna/php-render",
+    "authors": [
+        {
+            "name": "Mario Döring",
+            "email": "mario@clancats.com"
+        }
+    ],
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "PHPR\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PHPR\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
