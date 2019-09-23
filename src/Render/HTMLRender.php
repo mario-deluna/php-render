@@ -10,15 +10,17 @@ use PHPR\Canvas;
  */
 class HTMLRender
 {
+    public $pixelSize = 10;
+
     public function render(Canvas $canvas) : string
     {
-        $chunks = array_chunk($canvas->bitmap, $canvas->height);
+        $chunks = array_chunk($canvas->buffer, $canvas->height);
 
         $buffer = 
         '<style>'.
-            '#idiot-render { width: '.($canvas->width * 5).'px; border: 1px solid #dbdbdb; }'.
-            '#idiot-render .row { height: 5px; }'.
-            '#idiot-render .row div { height: 5px; width: 5px; float: left; }'.
+            '#idiot-render { width: '.($canvas->width * $this->pixelSize).'px; border: 1px solid #dbdbdb; }'.
+            '#idiot-render .row { height: '.$this->pixelSize.'px; }'.
+            '#idiot-render .row div { height: '.$this->pixelSize.'px; width: '.$this->pixelSize.'px; float: left; }'.
         '</style>';
 
         $buffer .= "<div id='idiot-render'>";
