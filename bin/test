@@ -4,16 +4,14 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use PHPR\{
-    Canvas, Color,
+    Context, Color, Vec3,
 
     Render\HTMLRender
 };
 
-$canvas = new PHPR\Canvas(50, 50);
+$canvas = new PHPR\Context(50, 50);
 
-var_dump(Color::fromInt4(0xFFF000FF));
-
-// foreach($canvas->bitmap as &$color) {
+// foreach($canvas->buffer as &$color) {
 //     $color = mt_rand(0x000000, 0xFFFFFF);
 // }
 
@@ -21,8 +19,17 @@ var_dump(Color::fromInt4(0xFFF000FF));
 
 //$canvas->drawLine(0,0, 50,50, 0x000000);
 //$canvas->drawLine(0,20, 50,40, 0x000000);
-$canvas->drawLine(10,20, 15,30, 0x000000);
-$canvas->drawLine(mt_rand(0,50), mt_rand(0,50), mt_rand(0,50), mt_rand(0,50), 0x000000);
+//$canvas->drawLine(10,20, 15,30, 0x000000);
+//$canvas->drawLine(mt_rand(0,50), mt_rand(0,50), mt_rand(0,50), mt_rand(0,50), 0x000000);
+
+$ranges = $canvas->getTriangleRanges(
+    new Vec3(0, 0, 0.0),
+    new Vec3(49, 10, 0.0),
+    new Vec3(24, 49, 0.0)
+);
+
+
+var_dump($ranges); die;
 
 $renderer = new HTMLRender;
 file_put_contents(__DIR__ . '/../out.html', $renderer->render($canvas));

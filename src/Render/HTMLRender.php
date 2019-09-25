@@ -2,7 +2,7 @@
 
 namespace PHPR\Render;
 
-use PHPR\Canvas;
+use PHPR\Context;
 
 /**
  * Because fun!!
@@ -12,7 +12,7 @@ class HTMLRender
 {
     public $pixelSize = 10;
 
-    public function render(Canvas $canvas) : string
+    public function render(Context $canvas) : string
     {
         $chunks = array_chunk($canvas->buffer, $canvas->height);
 
