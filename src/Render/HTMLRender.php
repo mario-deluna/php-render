@@ -14,7 +14,7 @@ class HTMLRender
 
     public function render(Context $canvas) : string
     {
-        $chunks = array_chunk($canvas->buffer, $canvas->height);
+        $chunks = array_chunk($canvas->buffer, $canvas->width);
 
         $buffer = 
         '<style>'.

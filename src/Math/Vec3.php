@@ -1,6 +1,6 @@
 <?php 
 
-namespace PHPR;
+namespace PHPR\Math;
 
 class Vec3
 {
