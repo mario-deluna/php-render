@@ -199,7 +199,7 @@ class Rasterizer
     /**
      * Returns the vertex contribution for a pixel cords array
      * I don't konw the correct term for this process, but its target
-     * is to calculate how near a pixel is to each vertex to allow interpolaration later
+     * is to calculate how near a pixel is to each vertex to allow uv and other interpolaration later
      *
      * @param int           $x1
      * @param int           $y1
@@ -214,29 +214,34 @@ class Rasterizer
     {   
         $contribution = [];
 
-        $minx = min($x1, $x2, $x3);
-        $maxx = max($x1, $x2, $x3);
-        $miny = min($y1, $y2, $y3);
-        $maxy = max($y1, $y2, $y3);
+        // A (v1)   B (v2)
+        // *--------*
+        // |     .
+        // |  . 
+        // * 
+        // C (v3)
 
-        var_dump($minx, $maxx, $miny, $maxy); die;
+        $vd = ($y3 - $y1);
+        $ud = ($x3 - $x1);
+        $vb = ($y2 - $y1);
+        $ub = ($x2 - $x1);
 
-        $x1 = ($x1 - $minx) / ($maxx - $minx);
-        $x2 = ($x2 - $minx) / ($maxx - $minx);
-        $x3 = ($x3 - $minx) / ($maxx - $minx);
+        $v1v = $x1 * $vd;
+        $d = $vb * $ud - $ub * $vd;
 
-        $y1 = ($y1 - $miny) / ($maxy - $miny);
-        $y2 = ($y2 - $miny) / ($maxy - $miny);
-        $y3 = ($y3 - $miny) / ($maxy - $miny);
- 
         for($i = 0; $i < count($pixels); $i+=2) 
         {
             $x = $pixels[$i+0];
             $y = $pixels[$i+1];
 
-            // v1
+            $u = ($v1v + (($y - $y1) * $ud) - ($x * $vd)) / $d;
+            $v = ($y - $y1 - $u * $vb) / $vd;
 
-            $contribution[] = $x1;
+            $contribution[] = 1 - $u - $v;
+            $contribution[] = $u;
+            $contribution[] = $v;
         }
+
+        return $contribution;
     }
 }
