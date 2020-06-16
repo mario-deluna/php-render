@@ -3,71 +3,54 @@
 require __DIR__ . '/bootstrap.php';
 
 use PHPR\{
-    Context, Color, Vec3,
-
+    Context,
+    Buffer\Buffer2D,
+    Math\Vec3, 
+    Mesh\Vertex,
+    Shader\TriangleTestShader,
     Render\HTMLRender
 };
 
-$canvas = new PHPR\Context(50, 50);
+$canvas = new PHPR\Context(80, 60);
+$canvas->attachBuffer(Buffer2D::TYPE_INT, 'color');
+$canvas->setOutputBuffer('color');
+$canvas->bindShader(new TriangleTestShader);
 
-// foreach($canvas->buffer as &$color) {
-//     $color = mt_rand(0x000000, 0xFFFFFF);
-// }
+$tris = 10;
 
-//$canvas->drawLine(0,0, 50,50, 0x000000);
-//$canvas->drawLine(0,20, 50,40, 0x000000);
+for($y=0;$y<$tris;$y++) 
+{
+    for($x=0;$x<$tris;$x++) 
+    {
+        $w = 2 / $tris;
+        $txl = ($w * $x) - 1;
+        $txr = $txl + $w / 2;
+        $tyt = ($w * $y) - 1;
+        $tyb = $tyt + $w;
+        $t3x = $txr + ($w * 0.5);
+        //_dd($txl, $txr, $tyt, $tyb, $t3x);
 
+        $v1 = Vertex::cP($txl, $tyt, 0.0);
+        $v2 = Vertex::cP($txr, $tyt, 0.0);
+        $v3 = Vertex::cP($t3x, $tyb, 0.0);
 
-// BR
-// $canvas->drawLine(25, 25, 50, 50, 0x000000);
-// $canvas->drawLine(25, 25, 50, 25, 0x888888);
-// $canvas->drawLine(25, 25, 50, 36, 0xAAAAAA);
+        $v1->color = new Vec3(1.0, 0.0, 0.0);
+        $v2->color = new Vec3(0.0, 1.0, 0.0);
+        $v3->color = new Vec3(0.0, 0.0, 1.0);
 
-// // TR
-// $canvas->drawLine(25, 25, 50, 12, 0xFF0000);
-// $canvas->drawLine(25, 25, 0, 0, 0xFF0000);
+        $canvas->drawTriangle($v1, $v2, $v3);
+    }
+}
 
-//$canvas->bufferDrawLine(0, 0, 200, 100, 0xFF0000);
+$v1 = Vertex::cP(-0.8, -0.8, 0.0);
+$v2 = Vertex::cP(0.8, -0.8, 0.0);
+$v3 = Vertex::cP(0.0, 0.8, 0.0);
 
-$canvas->drawLine(-1, 0, 1, 0, 0xFF00FF);
+$v1->color = new Vec3(1.0, 0.0, 0.0);
+$v2->color = new Vec3(0.0, 1.0, 0.0);
+$v3->color = new Vec3(0.0, 0.0, 1.0);
 
-// $pixels = [];
-// $canvas->getLine(-1, 0, 1, 0, $pixels);
-// var_dump($pixels);
-
-// $canvas->drawLine(25, 25, 50, 50, 0xFF0000);
-// $canvas->drawLine(0, 0, 50, 25, 0xFFFF00);
-//$canvas->drawLine(25,0, 25,50, 0x000000);
-
-// $line = [mt_rand() / mt_getrandmax(), mt_rand() / mt_getrandmax(), mt_rand() / mt_getrandmax(), mt_rand() / mt_getrandmax()];
-// $canvas->drawLine($line[0], $line[1], $line[2], $line[3], 0x000000);
-
-$canvas->drawTriangleLines(
-    new Vec3(-0.5, -0.5, 0.0),
-    new Vec3(0.5, -0.5, 0.0),
-    new Vec3(0.0, 0.5, 0.0),
-    0x000000
-);
-
-
-$pixels = [];
-$canvas->getTriangle(
-    new Vec3(-0.5, -0.5, 0.0),
-    new Vec3(0.5, -0.5, 0.0),
-    new Vec3(0.0, 0.5, 0.0),
-    $pixels
-);
-
-_d($pixels);
-
-// $canvas->getTriangleRanges(
-//     new Vec3(0, 0, 0.0),
-//     new Vec3(49, 0, 0.0),
-//     new Vec3(24, 49, 0.0),
-//     0x000000
-// );
-
-// var_dump($canvas->getLinePoints(0, 0, 50, 50)); die;
+$canvas->drawTriangle($v1, $v2, $v3);
 
 $renderer = new HTMLRender;
 ?>

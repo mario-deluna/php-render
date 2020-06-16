@@ -2,215 +2,246 @@
 
 namespace PHPR;
 
-use Shader\Shader;
+use PHPR\Shader\Shader;
+
+use PHPR\Mesh\Vertex;
+use PHPR\Buffer\Buffer2D;
+
+use PHPR\Math\Vec3;
 
 class Context
 {
     /**
-     * Color Buffer
-     *
-     * @var array[int] 
+     * Rasterizer instance 
      */
-    public $buffer = [];
-
-    /** 
-     * Depth Buffer 
-     *
-     * @var array[int]
-     */
-    public $depth = [];
+    private Rasterizer $rasterizer;
 
     /**
-     * Dimensions
-     *
-     * @var int
+     * Current shader program
      */
-    public $width;
-    public $height;
+    private Shader $shader;
 
     /**
-     * Shader instance 
-     * 
-     * @var Shader
+     * Depth Buffer
      */
-    private $shader;
+    private Buffer2D $depthBuffer;
 
     /**
-     * Construct
-     *
-     * @param int                   $width
-     * @param int                   $height
+     * An array of attached buffers
+     */
+    private array $buffers = [];
+
+    /**
+     * Output buffer key
+     */
+    private ?string $outputBufferKey = null;
+
+    /**
+     * Context Resolution
+     */
+    private int $width;
+    private int $height;
+
+    /**
+     * Constructor
      */
     public function __construct(int $width, int $height)
     {
         $this->width = $width;
         $this->height = $height;
-        $this->buffer = array_fill(0, $width * $height, 0xFFFFFF);
-        $this->depth = array_fill(0, $width * $height, 0x000000);
+
+        // create rasterizer
+        $this->rasterizer = new Rasterizer($width, $height);
+
+        // create depth buffer
+        $this->depthBuffer = new Buffer2D(Buffer2D::TYPE_DOUBLE, $width, $height);
     }
 
-    /**
-     * Draw a single pixel
-     */
-    public function setPixel(int $x, int $y, int $color)
+    public function getWidth() : int
     {
-        $this->buffer[(($y * $this->width) + $x)] = $color;
+        return $this->width;
+    }
+
+    public function getHeight() : int
+    {
+        return $this->height;
     }
 
     /**
-     * Draw an array of pixels
+     * Bind a shader to the context
      *
-     * @param array             $pixels
+     * @param Shader            $shader
      */
-    public function drawArray(array &$pixels)
+    public function bindShader(Shader $shader)
     {
-        for ($i=0;$i<count($pixels);$i+=2) 
-        {
-            $x = $v[$i];
-            $y = $v[$i + 1];
+        $this->shader = $shader;
+    }
 
-            // set frag coords
-            $this->shader->fragCoords->x = $x;
-            $this->shader->fragCoords->y = $y;
+    /**
+     * Set the output buffer key
+     *
+     * @param string                $key
+     */
+    public function setOutputBuffer(string $key)
+    {
+        $this->outputBufferKey = $key;
+    }
 
-            // calculate the fragment color
-            $this->buffer[(($y * $this->width) + $x)] = $this->shader->fragmentColor();
+    /**
+     * Get the current output buffer
+     *
+     * @param string                $key
+     */
+    public function getOutputBuffer() : Buffer2D
+    {
+        if (!$this->outputBufferKey) throw new \Exception("No output buffer has been set.");
+        return $this->getBuffer($this->outputBufferKey);
+    }
+
+    /**
+     * Get a attached buffer
+     *
+     * @param string                $key
+     */
+    public function getBuffer(string $key) : Buffer2D
+    {
+        if (!isset($this->buffers[$key])) throw new \Exception("There is no buffer named '$key' attached.");
+        return $this->buffers[$key];
+    }
+
+    /**
+     * Attach a buffer to the context
+     *
+     * @param int               $type
+     * @param string            $key
+     */
+    public function attachBuffer(int $type, string $key)
+    {
+        if (isset($this->buffers[$key])) {
+            throw new \Exception("Buffer with the key '{$key}' is already attached.");
         }
+
+        $this->buffers[$key] = new Buffer2D($type, $this->width, $this->height);
     }
 
-    public function drawTriangleLines(Vec3 $v1, Vec3 $v2, Vec3 $v3, int $color)
+    /**
+     * Set the current active shader
+     *
+     * @param Shader            $program 
+     */
+    public function setShader(Shader $program)
     {
-        $this->drawLine($v1->x, $v1->y, $v2->x, $v2->y, $color);
-        $this->drawLine($v2->x, $v2->y, $v3->x, $v3->y, $color);
-        $this->drawLine($v3->x, $v3->y, $v1->x, $v1->y, $color);
+        $this->shader = $program;
     }
 
-    public function getTriangle(Vec3 $v1, Vec3 $v2, Vec3 $v3, array &$p)
+    /**
+     * Returns the sum of weighted values
+     *
+     * @return int / float
+     */
+    private function intrpWeights($vx, $vy, $vz, $wx, $wy, $wz)
     {
-        $a = $b = $c = [];
+        $vx *= $wx;
+        $vy *= $wy;
+        $vz *= $wz;
 
-        $this->getLine($v1->x, $v1->y, $v2->x, $v2->y, $a);
-        $this->getLine($v2->x, $v2->y, $v3->x, $v3->y, $b);
-        $this->getLine($v3->x, $v3->y, $v1->x, $v1->y, $c);
-
-        // get pixels per row
-        $r = [];
-        foreach([$a, $b, $c] as $v)
-        {
-            for ($i=0;$i<count($v);$i+=2) 
-            {
-                $x = $v[$i];
-                $y = $v[$i + 1];
-                $r[$y] = $r[$y] ?? [];
-                $r[$y][] = $x;
-            }
-        }
-
-        // build pixel array
-        foreach($r as $y => $xa)
-        {
-            for($x=min($xa); $x<max($xa); $x++) {
-                $p[] = $x;
-                $p[] = $y;
-            }
-        }
+        return $vx + $vy + $vz;
     }
 
-
-    public function drawLine(float $x1, float $y1, float $x2, float $y2, int $color)
+    /**
+     * Draw a single triangle on the current buffer
+     *
+     * @param Vertex                $v1
+     * @param Vertex                $v2
+     * @param Vertex                $v3
+     */
+    public function drawTriangle(Vertex $v1, Vertex $v2, Vertex $v3)
     {
-        $x1 = ($x1 + 1) / 2;
-        $x2 = ($x2 + 1) / 2;
-        $y1 = ($y1 + 1) / 2;
-        $y2 = ($y2 + 1) / 2;
+        // convert screen space to pixel coords
+        $x1 = (int) ((($v1->position->x + 1) / 2) * $this->width);
+        $x2 = (int) ((($v2->position->x + 1) / 2) * $this->width);
+        $x3 = (int) ((($v3->position->x + 1) / 2) * $this->width);
+        $y1 = (int) ((($v1->position->y + 1) / 2) * $this->height);
+        $y2 = (int) ((($v2->position->y + 1) / 2) * $this->height);
+        $y3 = (int) ((($v3->position->y + 1) / 2) * $this->height);
 
-        $this->bufferDrawLine(
-            ($x1 * $this->width),
-            ($y1 * $this->height),
-            ($x2 * $this->width),
-            ($y2 * $this->height),
-            $color
-        );
-    }
+        $pixels = [];
 
-    public function getLine(float $x1, float $y1, float $x2, float $y2, array &$pixels)
-    {
-        $x1 = ($x1 + 1) / 2;
-        $x2 = ($x2 + 1) / 2;
-        $y1 = ($y1 + 1) / 2;
-        $y2 = ($y2 + 1) / 2;
+        // prepare vertex out
+        $vOut1 = [];
+        $vOut2 = [];
+        $vOut3 = [];
 
-        $this->bufferGetLine(
-            ($x1 * $this->width),
-            ($y1 * $this->height),
-            ($x2 * $this->width),
-            ($y2 * $this->height),
+        // generate vertex shader output 
+        $this->shader->vertex($v1, $vOut1);
+        $this->shader->vertex($v2, $vOut2);
+        $this->shader->vertex($v3, $vOut3);
+
+        // rasterize the triangle
+        $this->rasterizer->rasterTriangle(
+            $x1, $y1, 
+            $x2, $y2, 
+            $x3, $y3, 
             $pixels
         );
-    }
 
-    public function bufferGetLine(int $x1, int $y1, int $x2, int $y2, array &$pixels)
-    {
-        $dx = abs($x2 - $x1);
-        $dy = -abs($y2 - $y1);
+        // calculate vertex weights
+        $vw = $this->rasterizer->getVertexContributionForPixels(
+            $x1, $y1, 
+            $x2, $y2, 
+            $x3, $y3, 
+            $pixels
+        );
 
-        $sx = $x1 < $x2 ? 1 : -1;
-        $sy = $y1 < $y2 ? 1 : -1;
+        $rawBuffer = $this->getBuffer('color');
 
-        $e = $dx + $dy;
+        $fragOut = [];
+        $fragIn = [];
 
-        while (1) 
+        for($i = 0; $i < count($pixels); $i+=2) 
         {
-            $pixels[] = $x1;
-            $pixels[] = $y1;
+            $x = $pixels[$i+0];
+            $y = $pixels[$i+1];
 
-            if ($x1 >= $this->width - 1) break;
-            if ($y1 >= $this->height - 1) break;
+            $vp = floor($i / 2) * 3;
+            $w1 = $vw[$vp+0];
+            $w2 = $vw[$vp+1];
+            $w3 = $vw[$vp+2];
 
-            $e2 = $e * 2;
+            foreach($vOut1 as $k => $vValue1)
+            {
+                $vValue2 = $vOut2[$k];
+                $vValue3 = $vOut3[$k];
 
-            if ($e2 >= $dy) {
-                if ($x1 === $x2) break;
-                $e += $dy;
-                $x1 += $sx;
+                if ($vValue1 instanceof Vec3) {
+                    $fragIn[$k] = new Vec3(
+                        $this->intrpWeights($vValue1->x, $vValue2->x, $vValue3->x, $w1, $w2, $w3),
+                        $this->intrpWeights($vValue1->y, $vValue2->y, $vValue3->y, $w1, $w2, $w3),
+                        $this->intrpWeights($vValue1->z, $vValue2->z, $vValue3->z, $w1, $w2, $w3),
+                    );
+                }
+                else 
+                {
+                    throw new \Exception("Invalid vertex output for key '$k' cannot be interpolarted.");
+                }
             }
-            if ($e2 <= $dx) {
-                if ($y1 === $y2) break;
-                $e += $dx;
-                $y1 += $sy;
+
+            // let the fragment shader do its thing
+            $this->shader->fragment($fragIn, $fragOut);
+
+            // assign outputs to buffers
+            foreach($fragOut as $k => $value)
+            {
+                $this->buffers[$k]->setAtPos($x, $y, $value);
             }
         }
     }
 
-    public function bufferDrawLine(int $x1, int $y1, int $x2, int $y2, int $color)
+    /**
+     * Draw single triangle
+     */
+    public function drawVertexArray()
     {
-        $dx = abs($x2 - $x1);
-        $dy = -abs($y2 - $y1);
 
-        $sx = $x1 < $x2 ? 1 : -1;
-        $sy = $y1 < $y2 ? 1 : -1;
-
-        $e = $dx + $dy;
-
-        while (1) 
-        {
-            $this->setPixel($x1, $y1, $color);
-
-            if ($x1 >= $this->width - 1) break;
-            if ($y1 >= $this->height - 1) break;
-
-            $e2 = $e * 2;
-
-            if ($e2 >= $dy) {
-                if ($x1 === $x2) break;
-                $e += $dy;
-                $x1 += $sx;
-            }
-            if ($e2 <= $dx) {
-                if ($y1 === $y2) break;
-                $e += $dx;
-                $y1 += $sy;
-            }
-        }
     }
 }

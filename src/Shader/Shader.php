@@ -2,16 +2,17 @@
 
 namespace PHPR\Shader;
 
-use PHPR\Vec3;
+use PHPR\Mesh\Vertex;
 
 abstract class Shader
 {
-    public $fragCoords = new Vec3();
+    /**
+     * Vertex shader like thing
+     */
+    abstract public function vertex(Vertex $vertex, array &$out);
 
     /**
-     * Return an int of the current pixel color
-     *
-     * @return int
+     * Fragment shader like thing
      */
-    abstract public function fragmentColor() : int;
+    abstract public function fragment(array &$in, array &$out);
 }

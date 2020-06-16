@@ -175,7 +175,7 @@ class Rasterizer
         // now reduce the edge
         foreach($scanlineMin as $y => $min) 
         {
-            $max = $scanlineMax[$y];
+            $max = $scanlineMax[$y] + 1;
 
             // skip if they are the same meaning we 
             // are already covered by the line itslef
@@ -229,6 +229,9 @@ class Rasterizer
         $v1v = $x1 * $vd;
         $d = $vb * $ud - $ub * $vd;
 
+        if ($d === 0) $d = 1;
+        if ($vd === 0) $vd = 1;
+
         for($i = 0; $i < count($pixels); $i+=2) 
         {
             $x = $pixels[$i+0];
@@ -237,9 +240,9 @@ class Rasterizer
             $u = ($v1v + (($y - $y1) * $ud) - ($x * $vd)) / $d;
             $v = ($y - $y1 - $u * $vb) / $vd;
 
-            $contribution[] = 1 - $u - $v;
-            $contribution[] = $u;
-            $contribution[] = $v;
+            $contribution[] = max(1 - $u - $v, 0);
+            $contribution[] = max($u, 0);
+            $contribution[] = max($v, 0);
         }
 
         return $contribution;

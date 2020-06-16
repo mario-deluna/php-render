@@ -14,22 +14,27 @@ class HTMLRender
 
     public function render(Context $canvas) : string
     {
-        $chunks = array_chunk($canvas->buffer, $canvas->width);
+        $buffer = $canvas->getOutputBuffer();
+
+        $chunks = array_chunk($buffer->raw(), $canvas->getWidth());
 
         $buffer = 
         '<style>'.
-            '#idiot-render { width: '.($canvas->width * $this->pixelSize).'px; border: 1px solid #dbdbdb; }'.
+            '#idiot-render { width: '.($canvas->getWidth() * $this->pixelSize).'px; border: 1px solid #dbdbdb; }'.
             '#idiot-render .row { height: '.$this->pixelSize.'px; }'.
             '#idiot-render .row div { height: '.$this->pixelSize.'px; width: '.$this->pixelSize.'px; float: left; }'.
         '</style>';
 
+        $i = 0;
+
         $buffer .= "<div id='idiot-render'>";
-        foreach($chunks as &$chunk) 
+        foreach($chunks as $y => &$chunk) 
         {
             $buffer .= '<div class="row">';
-            foreach($chunk as &$color) 
+            foreach($chunk as $x => &$color) 
             {
                 $buffer .= '<div style="background-color: #'.substr('000000' . dechex($color), -6).'"></div>';
+                $i++;
             }
             $buffer .= '</div>';
         }

@@ -13,4 +13,9 @@ class Vec3
         $this->y = $y;
         $this->z = $z;
     }
+
+    public function toColorInt() : int
+    {
+        return (($this->x * 255 & 0xff) << 16) + (($this->y * 255  & 0xff) << 8) + ($this->z * 255  & 0xff);
+    }
 }

@@ -23,12 +23,7 @@ class Buffer2D
      * Raw buffer reference
      */
     private $bufferRef;
-
-    /**
-     * Rasterizer instance 
-     */
-    private Rasterizer $rasterizer;
-
+    
     /**
      * Constructor
      */
@@ -92,9 +87,6 @@ class Buffer2D
 
         // assign buffer reference
         $this->bufferRef = &$this->buffer->raw();
-
-        // create a rasterizer
-        $this->rasterizer = new Rasterizer($this->width, $this->height);
     }
 
     /**
