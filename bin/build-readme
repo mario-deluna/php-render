@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+
+$readme = glob(__DIR__ . '/../examples/*/README.md');
+
+$buffer = "";
+
+foreach($readme as $file)
+{
+    $content = file_get_contents($file);
+
+    $buffer .= PHP_EOL . $content;
+}
+
+// read the readme 
+$readmeLines = explode(PHP_EOL, file_get_contents(__DIR__ . '/../README.md'));
+
+$rangeStart = array_search('## Examples', $readmeLines) + 1;
+$rangeEnd = array_search('## Credits', $readmeLines) - 1;
+
+for ($i = $rangeStart; $i <= $rangeEnd; $i++)
+    unset($readmeLines[$i]);
+
+array_splice($readmeLines, $rangeStart, 0, [$buffer]);
+
+file_put_contents(__DIR__ . '/../README.md', implode(PHP_EOL, $readmeLines));

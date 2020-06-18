@@ -29,6 +29,11 @@ When I started with programming, I often encountered parts of computer science t
 
 ## Examples
 
+### Interpolartion Triangle 
+
+
+![Triangle Example](image.tga.png?raw=true)
+
 ## Credits
 
 - [Mario Döring](https://github.com/mario-deluna)

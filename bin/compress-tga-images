@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# This scripts converts all tga images in the example folder to png
+# I do this to not have 5mb images in the exmaple docs
+for f in $(find ./examples -name '*.tga'); 
+    do convert $f "$f.png"; 
+done
