@@ -8,6 +8,8 @@ $buffer = "";
 foreach($readme as $file)
 {
     $content = file_get_contents($file);
+    $expath = substr(dirname(str_replace(__DIR__, '', $file)), 4);
+    $content = preg_replace("/\(([a-zA-z]+\.tga\.png.*)\)/", '('.$expath.'/$1)', $content);
 
     $buffer .= PHP_EOL . $content;
 }

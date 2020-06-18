@@ -1,5 +1,5 @@
 <?php 
-
+define('EXAMPLE_DIR', __DIR__);
 require __DIR__ . '/../example_base.php';
 
 use PHPR\Shader\TriangleTestShader;

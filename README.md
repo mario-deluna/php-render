@@ -32,7 +32,7 @@ When I started with programming, I often encountered parts of computer science t
 ### Interpolartion Triangle 
 
 
-![Triangle Example](image.tga.png?raw=true)
+![Triangle Example](examples/01_triangle/image.tga.png?raw=true)
 
 ## Credits
 

@@ -193,8 +193,6 @@ class Context
             $pixels
         );
 
-        $rawBuffer = $this->getBuffer('color');
-
         $fragOut = [];
         $fragIn = [];
 

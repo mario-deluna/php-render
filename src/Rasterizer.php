@@ -21,10 +21,7 @@ class Rasterizer
         $this->width = $width;
         $this->height = $height;
     }
-
-    public function screenSpaceToBufferSpace()
-    {}
-
+    
     /** 
      * Raster a single line in screen cords
      *
