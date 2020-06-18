@@ -27,4 +27,13 @@ I should also note I'm still nowhere near an expert in the field.
 
 When I started with programming, I often encountered parts of computer science that seemed super interesting and I wanted to learn more about them. But not having examples/tutorials in a language I was familiar with got me overwhelmed fast. This is an issue that fades away after years in the industry but I still remember the frustration. Long story short I hope this project helps someone learning something new. 
 
+## Examples
 
+## Credits
+
+- [Mario Döring](https://github.com/mario-deluna)
+- [All Contributors](https://github.com/mario-deluna/php-render/contributors)
+
+## License
+
+The License (AGPLv3). Please see [License File](https://github.com/mario-deluna/php-render/blob/master/LICENSE) for more information.
