@@ -46,12 +46,32 @@ class Mat4
         ];
     }
 
+    public static function _multiplyScalar(Mat4 $left, float $value, ?Mat4 &$result = null)
+    {
+        if (is_null($result)) $result = new Mat4;
+        $resultValues = &$result->valueRef();
+
+        for ($i = 0; $i < 16; ++$i) {
+            $resultValues[$i] *= $value;
+        }
+    }
+
+    public function multiplyScalar(float $value)
+    {
+        Mat4::_multiplyScalar($this, $value, $this); return $this; 
+    }
+
     /**
      * Get the matrix data
      *
      * @return array
      */
     public function raw() : array
+    {
+        return $this->values;
+    }
+
+    public function &valueRef() : array
     {
         return $this->values;
     }
