@@ -12,6 +12,44 @@ class IVec2
         $this->x = $x;
         $this->y = $y;
     }
+
+    /**
+     * Vector length
+     */
+    public function length() : int
+    {
+        return sqrt($this->x * $this->x + $this->y * $this->y);
+    }
+
+    /**
+     * Normalize the given vector
+     */
+    public static function _normalize(IVec2 $vector, ?IVec2 &$result = null)
+    {
+        if (is_null($result)) $result = new IVec2(0, 0);
+
+        $length = $vector->length();
+
+        if ($length > 0) { 
+           $result->x = $vector->x / $length;
+           $result->y = $vector->y / $length;
+
+        } else { 
+           $result->x = 0;
+           $result->y = 0;
+
+        }
+
+        return $result;
+    }
+
+    /**
+     * Normalize the current vector
+     */
+    public function normalize()
+    {
+        IVec2::_normalize($this, $this); return $this;
+    }
     
     /**
      * Add two vectors together
