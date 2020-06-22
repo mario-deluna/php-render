@@ -60,4 +60,28 @@ class Vec3Test extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals([2.5, 1, 0.5], $a->raw());
     }
+
+    public function testDot()
+    {
+        $a = new Vec3(1, 2, 3);
+        $b = new Vec3(1, 5, 7);
+
+        $this->assertEquals(32, $a->dot($b));
+    }
+
+    public function testDistance()
+    {
+        $a = new Vec3(0, 10, 0);
+        $b = new Vec3(0, 20, 0);
+
+        $this->assertEquals(10, $a->distance($b));
+    }
+
+    public function testCross()
+    {
+        $a = new Vec3(1, 2, 3);
+        $b = new Vec3(1, 5, 7);
+
+        $this->assertEquals([-1, -4, 3], $a->cross($b)->raw());
+    }
 }

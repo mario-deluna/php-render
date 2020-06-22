@@ -189,7 +189,13 @@ class Vec2
     }
     
     /**
-     * Multiply a vector by a scalar value
+     *  Multiply a vector by a scalar value
+     *
+     * @param Vec2           $left
+     * @param float       $value
+     * @param Vec2|null      $result The vector the result is written to.
+     *
+     * @return Vec2                   The result vector. 
      */
     public static function _multiply(Vec2 $left, float $value, ?Vec2 &$result = null)
     {
@@ -203,6 +209,9 @@ class Vec2
 
     /**
      * Multiply the current vector by a scalar value
+     *
+     * @param float       $value
+     * @return self
      */
     public function multiply(float $value)
     {
@@ -210,7 +219,13 @@ class Vec2
     }
     
     /**
-     * Divide a vector by a scalar value
+     *  Divide a vector by a scalar value
+     *
+     * @param Vec2           $left
+     * @param float       $value
+     * @param Vec2|null      $result The vector the result is written to.
+     *
+     * @return Vec2                   The result vector. 
      */
     public static function _divide(Vec2 $left, float $value, ?Vec2 &$result = null)
     {
@@ -226,6 +241,9 @@ class Vec2
 
     /**
      * Divide the current vector by a scalar value
+     *
+     * @param float       $value
+     * @return self
      */
     public function divide(float $value)
     {
@@ -234,6 +252,8 @@ class Vec2
 
     /**
      * Converts the vector into an integer representing a color or anything you want it to be 
+     *
+     * @return int
      */
     public function toColorInt() : int
     {
@@ -242,6 +262,8 @@ class Vec2
 
     /**
      * Just return the data as array
+     *
+     * @return array
      */
     public function raw() : array
     {

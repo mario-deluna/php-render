@@ -203,7 +203,13 @@ class Vec3
     }
     
     /**
-     * Multiply a vector by a scalar value
+     *  Multiply a vector by a scalar value
+     *
+     * @param Vec3           $left
+     * @param float       $value
+     * @param Vec3|null      $result The vector the result is written to.
+     *
+     * @return Vec3                   The result vector. 
      */
     public static function _multiply(Vec3 $left, float $value, ?Vec3 &$result = null)
     {
@@ -218,6 +224,9 @@ class Vec3
 
     /**
      * Multiply the current vector by a scalar value
+     *
+     * @param float       $value
+     * @return self
      */
     public function multiply(float $value)
     {
@@ -225,7 +234,13 @@ class Vec3
     }
     
     /**
-     * Divide a vector by a scalar value
+     *  Divide a vector by a scalar value
+     *
+     * @param Vec3           $left
+     * @param float       $value
+     * @param Vec3|null      $result The vector the result is written to.
+     *
+     * @return Vec3                   The result vector. 
      */
     public static function _divide(Vec3 $left, float $value, ?Vec3 &$result = null)
     {
@@ -242,6 +257,9 @@ class Vec3
 
     /**
      * Divide the current vector by a scalar value
+     *
+     * @param float       $value
+     * @return self
      */
     public function divide(float $value)
     {
@@ -249,21 +267,32 @@ class Vec3
     }
     
     /**
-     * Add two vectors together
+     * Cross Product
+     *
+     * @param Vec3           $left
+     * @param Vec3           $right
+     * @param Vec3|null      $result The vector the result is written to.
+     *
+     * @return Vec3                   The result vector. 
      */
     public static function _cross(Vec3 $left, Vec3 $right, ?Vec3 &$result = null)
     {
         if (is_null($result)) $result = new Vec3(0, 0, 0);
+
+        $cleft = clone $left; 
     
-        $result->x = $left->y * $right->z - $left->z * $right->y;
-        $result->y = $left->z * $right->x - $left->x * $right->z;
-        $result->z = $left->x * $right->y - $left->y * $right->x;
+        $result->x = $cleft->y * $right->z - $cleft->z * $right->y;
+        $result->y = $cleft->z * $right->x - $cleft->x * $right->z;
+        $result->z = $cleft->x * $right->y - $cleft->y * $right->x;
         
         return $result;
     }
     
     /**
-     * Add a vector to the current one
+     * Cross Product
+     *
+     * @param Vec3               $right 
+     * @return self
      */
     public function cross(Vec3 $right)
     {
@@ -272,6 +301,8 @@ class Vec3
 
     /**
      * Converts the vector into an integer representing a color or anything you want it to be 
+     *
+     * @return int
      */
     public function toColorInt() : int
     {
@@ -280,6 +311,8 @@ class Vec3
 
     /**
      * Just return the data as array
+     *
+     * @return array
      */
     public function raw() : array
     {

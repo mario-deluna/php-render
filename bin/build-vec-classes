@@ -379,7 +379,13 @@ EOD;
     $buffer .= <<<EOD
     
     /**
-     * Multiply a vector by a scalar value
+     *  Multiply a vector by a scalar value
+     *
+     * @param {$name}           \$left
+     * @param {$dataType}       \$value
+     * @param {$name}|null      \$result The vector the result is written to.
+     *
+     * @return {$name}                   The result vector. 
      */
     public static function _multiply({$name} \$left, {$dataType} \$value, ?{$name} &\$result = null)
     {
@@ -391,6 +397,9 @@ EOD;
 
     /**
      * Multiply the current vector by a scalar value
+     *
+     * @param {$dataType}       \$value
+     * @return self
      */
     public function multiply({$dataType} \$value)
     {
@@ -407,7 +416,13 @@ EOD;
     $buffer .= <<<EOD
     
     /**
-     * Divide a vector by a scalar value
+     *  Divide a vector by a scalar value
+     *
+     * @param {$name}           \$left
+     * @param {$dataType}       \$value
+     * @param {$name}|null      \$result The vector the result is written to.
+     *
+     * @return {$name}                   The result vector. 
      */
     public static function _divide({$name} \$left, {$dataType} \$value, ?{$name} &\$result = null)
     {
@@ -421,6 +436,9 @@ EOD;
 
     /**
      * Divide the current vector by a scalar value
+     *
+     * @param {$dataType}       \$value
+     * @return self
      */
     public function divide({$dataType} \$value)
     {
@@ -437,21 +455,32 @@ EOD;
     $buffer .= <<<EOD
     
     /**
-     * Add two vectors together
+     * Cross Product
+     *
+     * @param {$name}           \$left
+     * @param {$name}           \$right
+     * @param {$name}|null      \$result The vector the result is written to.
+     *
+     * @return {$name}                   The result vector. 
      */
     public static function _cross({$name} \$left, {$name} \$right, ?{$name} &\$result = null)
     {
         {$codeMakeResultIfNot}
+
+        \$cleft = clone \$left; 
     
-        \$result->x = \$left->y * \$right->z - \$left->z * \$right->y;
-        \$result->y = \$left->z * \$right->x - \$left->x * \$right->z;
-        \$result->z = \$left->x * \$right->y - \$left->y * \$right->x;
+        \$result->x = \$cleft->y * \$right->z - \$cleft->z * \$right->y;
+        \$result->y = \$cleft->z * \$right->x - \$cleft->x * \$right->z;
+        \$result->z = \$cleft->x * \$right->y - \$cleft->y * \$right->x;
         
         return \$result;
     }
     
     /**
-     * Add a vector to the current one
+     * Cross Product
+     *
+     * @param {$name}               \$right 
+     * @return self
      */
     public function cross({$name} \$right)
     {
@@ -469,6 +498,8 @@ EOD;
 
     /**
      * Converts the vector into an integer representing a color or anything you want it to be 
+     *
+     * @return int
      */
     public function toColorInt() : int
     {
@@ -500,6 +531,8 @@ $buffer .= <<<EOD
 
     /**
      * Just return the data as array
+     *
+     * @return array
      */
     public function raw() : array
     {

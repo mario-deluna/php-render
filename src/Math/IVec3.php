@@ -203,7 +203,13 @@ class IVec3
     }
     
     /**
-     * Multiply a vector by a scalar value
+     *  Multiply a vector by a scalar value
+     *
+     * @param IVec3           $left
+     * @param int       $value
+     * @param IVec3|null      $result The vector the result is written to.
+     *
+     * @return IVec3                   The result vector. 
      */
     public static function _multiply(IVec3 $left, int $value, ?IVec3 &$result = null)
     {
@@ -218,6 +224,9 @@ class IVec3
 
     /**
      * Multiply the current vector by a scalar value
+     *
+     * @param int       $value
+     * @return self
      */
     public function multiply(int $value)
     {
@@ -225,7 +234,13 @@ class IVec3
     }
     
     /**
-     * Divide a vector by a scalar value
+     *  Divide a vector by a scalar value
+     *
+     * @param IVec3           $left
+     * @param int       $value
+     * @param IVec3|null      $result The vector the result is written to.
+     *
+     * @return IVec3                   The result vector. 
      */
     public static function _divide(IVec3 $left, int $value, ?IVec3 &$result = null)
     {
@@ -242,6 +257,9 @@ class IVec3
 
     /**
      * Divide the current vector by a scalar value
+     *
+     * @param int       $value
+     * @return self
      */
     public function divide(int $value)
     {
@@ -249,21 +267,32 @@ class IVec3
     }
     
     /**
-     * Add two vectors together
+     * Cross Product
+     *
+     * @param IVec3           $left
+     * @param IVec3           $right
+     * @param IVec3|null      $result The vector the result is written to.
+     *
+     * @return IVec3                   The result vector. 
      */
     public static function _cross(IVec3 $left, IVec3 $right, ?IVec3 &$result = null)
     {
         if (is_null($result)) $result = new IVec3(0, 0, 0);
+
+        $cleft = clone $left; 
     
-        $result->x = $left->y * $right->z - $left->z * $right->y;
-        $result->y = $left->z * $right->x - $left->x * $right->z;
-        $result->z = $left->x * $right->y - $left->y * $right->x;
+        $result->x = $cleft->y * $right->z - $cleft->z * $right->y;
+        $result->y = $cleft->z * $right->x - $cleft->x * $right->z;
+        $result->z = $cleft->x * $right->y - $cleft->y * $right->x;
         
         return $result;
     }
     
     /**
-     * Add a vector to the current one
+     * Cross Product
+     *
+     * @param IVec3               $right 
+     * @return self
      */
     public function cross(IVec3 $right)
     {
@@ -272,6 +301,8 @@ class IVec3
 
     /**
      * Converts the vector into an integer representing a color or anything you want it to be 
+     *
+     * @return int
      */
     public function toColorInt() : int
     {
@@ -280,6 +311,8 @@ class IVec3
 
     /**
      * Just return the data as array
+     *
+     * @return array
      */
     public function raw() : array
     {

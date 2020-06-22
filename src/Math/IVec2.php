@@ -189,7 +189,13 @@ class IVec2
     }
     
     /**
-     * Multiply a vector by a scalar value
+     *  Multiply a vector by a scalar value
+     *
+     * @param IVec2           $left
+     * @param int       $value
+     * @param IVec2|null      $result The vector the result is written to.
+     *
+     * @return IVec2                   The result vector. 
      */
     public static function _multiply(IVec2 $left, int $value, ?IVec2 &$result = null)
     {
@@ -203,6 +209,9 @@ class IVec2
 
     /**
      * Multiply the current vector by a scalar value
+     *
+     * @param int       $value
+     * @return self
      */
     public function multiply(int $value)
     {
@@ -210,7 +219,13 @@ class IVec2
     }
     
     /**
-     * Divide a vector by a scalar value
+     *  Divide a vector by a scalar value
+     *
+     * @param IVec2           $left
+     * @param int       $value
+     * @param IVec2|null      $result The vector the result is written to.
+     *
+     * @return IVec2                   The result vector. 
      */
     public static function _divide(IVec2 $left, int $value, ?IVec2 &$result = null)
     {
@@ -226,6 +241,9 @@ class IVec2
 
     /**
      * Divide the current vector by a scalar value
+     *
+     * @param int       $value
+     * @return self
      */
     public function divide(int $value)
     {
@@ -234,6 +252,8 @@ class IVec2
 
     /**
      * Converts the vector into an integer representing a color or anything you want it to be 
+     *
+     * @return int
      */
     public function toColorInt() : int
     {
@@ -242,6 +262,8 @@ class IVec2
 
     /**
      * Just return the data as array
+     *
+     * @return array
      */
     public function raw() : array
     {
