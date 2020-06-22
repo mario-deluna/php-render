@@ -213,6 +213,28 @@ class IVec3
     {
         IVec3::_divide($this, $value, $this); return $this;
     }
+    
+    /**
+     * Add two vectors together
+     */
+    public static function _cross(IVec3 $left, IVec3 $right, ?IVec3 &$result = null)
+    {
+        if (is_null($result)) $result = new IVec3(0, 0, 0);
+    
+        $result->x = $left->y * $right->z - $left->z * $right->y;
+        $result->y = $left->z * $right->x - $left->x * $right->z;
+        $result->z = $left->x * $right->y - $left->y * $right->x;
+        
+        return $result;
+    }
+    
+    /**
+     * Add a vector to the current one
+     */
+    public function cross(IVec3 $right)
+    {
+        IVec3::_cross($this, $right, $this); return $this;
+    }
 
     /**
      * Converts the vector into an integer representing a color or anything you want it to be 
