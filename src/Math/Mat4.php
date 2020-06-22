@@ -19,15 +19,15 @@ class Mat4
     /**
      * Construct a new matrix
      *
-     * @param array                 $data
+     * @param array                 $values
      */
-    public function __construct(?array $data = null)
+    public function __construct(?array $values = null)
     {
-        if (is_null($data)) {
+        if (is_null($values)) {
             $this->reset();
         } else {
-            if (count($data) !== 16) throw new \Exception("Invalid data size given to matrix constructor.");
-            $this->data = $data;
+            if (count($values) !== 16) throw new \Exception("Invalid data size given to matrix constructor.");
+            $this->values = $values;
         }
     }
 
@@ -38,7 +38,7 @@ class Mat4
      */
     public function reset()
     {
-        $this->data = [
+        $this->values = [
             1.0, 0.0, 0.0, 0.0,
             0.0, 1.0, 0.0, 0.0,
             0.0, 0.0, 1.0, 0.0,
@@ -53,6 +53,22 @@ class Mat4
      */
     public function raw() : array
     {
-        return $this->data;
+        return $this->values;
+    }
+
+    /**
+     * Dump the values  
+     */
+    public function __toString()
+    {
+        return sprintf(
+'Mat4:
+(
+    [%.2f, %.2f, %.2f, %.2f]
+    [%.2f, %.2f, %.2f, %.2f]
+    [%.2f, %.2f, %.2f, %.2f]
+    [%.2f, %.2f, %.2f, %.2f]
+)', ...$this->values
+        );
     }
 }
