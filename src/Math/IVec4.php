@@ -101,7 +101,12 @@ class IVec4
     }
     
     /**
-     * Vector dot product
+     * Dot Product
+     *
+     * @param IVec4           $left
+     * @param IVec4           $right
+     *
+     * @return int
      */
     public static function _dot(IVec4 $left, IVec4 $right) : int
     {   
@@ -109,7 +114,10 @@ class IVec4
     }
 
     /**
-     * Vector dot product
+     * Dot product with self
+     *
+     * @param IVec4               $right
+     * @return int
      */
     public function dot(IVec4 $right) : int
     {
@@ -117,7 +125,12 @@ class IVec4
     }
     
     /**
-     * Vector dot product
+     * Distance
+     *
+     * @param IVec4           $left
+     * @param IVec4           $right
+     *
+     * @return int
      */
     public static function _distance(IVec4 $left, IVec4 $right) : int
     {   
@@ -129,17 +142,26 @@ class IVec4
     }
 
     /**
-     * Vector dot product
+     * Distance from self
+     *
+     * @param IVec4               $right
+     * @return int
      */
     public function distance(IVec4 $right) : int
     {
         return IVec4::_distance($this, $right);
     }
-    
+
     /**
-     * Add two vectors together
+     *  Add two vectors together
+     *
+     * @param IVec4           $left
+     * @param IVec4           $right
+     * @param IVec4|null      $result The vector the result is written to.
+     *
+     * @return IVec4                   The result vector. 
      */
-    public static function _add(IVec4 $left, IVec4 $right, ?IVec4 &$result = null)
+    public static function _add(IVec4 $left, IVec4 $right, ?IVec4 &$result = null) : IVec4
     {
         if (is_null($result)) $result = new IVec4(0, 0, 0, 0);
         
@@ -153,6 +175,9 @@ class IVec4
     
     /**
      * Add a vector to the current one
+     *
+     * @param IVec4               $right 
+     * @return self
      */
     public function add(IVec4 $right)
     {
@@ -160,7 +185,13 @@ class IVec4
     }
     
     /**
-     * Substract a vector of another one
+     *  Substract a vector of another one
+     *
+     * @param IVec4           $left
+     * @param IVec4           $right
+     * @param IVec4|null      $result The vector the result is written to.
+     *
+     * @return IVec4                   The result vector. 
      */
     public static function _substract(IVec4 $left, IVec4 $right, ?IVec4 &$result = null)
     {
@@ -176,6 +207,9 @@ class IVec4
 
     /**
      * Substract a vector to the current one
+     *
+     * @param IVec4               $right 
+     * @return self
      */
     public function substract(IVec4 $right)
     {

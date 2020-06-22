@@ -236,7 +236,12 @@ EOD;
     $buffer .= <<<EOD
     
     /**
-     * Vector dot product
+     * Dot Product
+     *
+     * @param {$name}           \$left
+     * @param {$name}           \$right
+     *
+     * @return {$dataType}
      */
     public static function _dot({$name} \$left, {$name} \$right) : {$dataType}
     {   
@@ -244,7 +249,10 @@ EOD;
     }
 
     /**
-     * Vector dot product
+     * Dot product with self
+     *
+     * @param {$name}               \$right
+     * @return {$dataType}
      */
     public function dot({$name} \$right) : {$dataType}
     {
@@ -264,7 +272,12 @@ EOD;
     $buffer .= <<<EOD
     
     /**
-     * Vector dot product
+     * Distance
+     *
+     * @param {$name}           \$left
+     * @param {$name}           \$right
+     *
+     * @return {$dataType}
      */
     public static function _distance({$name} \$left, {$name} \$right) : {$dataType}
     {   
@@ -272,7 +285,10 @@ EOD;
     }
 
     /**
-     * Vector dot product
+     * Distance from self
+     *
+     * @param {$name}               \$right
+     * @return {$dataType}
      */
     public function distance({$name} \$right) : {$dataType}
     {
@@ -287,11 +303,17 @@ EOD;
      */
     $functionCode = codeGenSimpleLeftRight($properties, '+');
     $buffer .= <<<EOD
-    
+
     /**
-     * Add two vectors together
+     *  Add two vectors together
+     *
+     * @param {$name}           \$left
+     * @param {$name}           \$right
+     * @param {$name}|null      \$result The vector the result is written to.
+     *
+     * @return {$name}                   The result vector. 
      */
-    public static function _add({$name} \$left, {$name} \$right, ?{$name} &\$result = null)
+    public static function _add({$name} \$left, {$name} \$right, ?{$name} &\$result = null) : {$name}
     {
         {$codeMakeResultIfNot}
         
@@ -301,6 +323,9 @@ EOD;
     
     /**
      * Add a vector to the current one
+     *
+     * @param {$name}               \$right 
+     * @return self
      */
     public function add({$name} \$right)
     {
@@ -317,7 +342,13 @@ EOD;
     $buffer .= <<<EOD
     
     /**
-     * Substract a vector of another one
+     *  Substract a vector of another one
+     *
+     * @param {$name}           \$left
+     * @param {$name}           \$right
+     * @param {$name}|null      \$result The vector the result is written to.
+     *
+     * @return {$name}                   The result vector. 
      */
     public static function _substract({$name} \$left, {$name} \$right, ?{$name} &\$result = null)
     {
@@ -329,6 +360,9 @@ EOD;
 
     /**
      * Substract a vector to the current one
+     *
+     * @param {$name}               \$right 
+     * @return self
      */
     public function substract({$name} \$right)
     {
