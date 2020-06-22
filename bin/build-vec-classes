@@ -1,0 +1,456 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Vector class generator
+ * ----------------------------------------------
+ * 
+ * The vector classes are very similar so it makes sense to generate them.
+ * Thats what this script is for, so don't change the files directly please.
+ */
+$genClasses = [
+    [
+        'name' => 'Vec4',
+        'properties' => ['x', 'y', 'z', 'w'],
+        'dataType' => 'float',
+    ],
+    [
+        'name' => 'Vec3',
+        'properties' => ['x', 'y', 'z'],
+        'dataType' => 'float',
+    ],
+    [
+        'name' => 'Vec2',
+        'properties' => ['x', 'y'],
+        'dataType' => 'float',
+    ],
+
+
+    [
+        'name' => 'IVec4',
+        'properties' => ['x', 'y', 'z', 'w'],
+        'dataType' => 'int',
+    ],
+    [
+        'name' => 'IVec3',
+        'properties' => ['x', 'y', 'z'],
+        'dataType' => 'int',
+    ],
+    [
+        'name' => 'IVec2',
+        'properties' => ['x', 'y'],
+        'dataType' => 'int',
+    ]
+];
+
+$sourcePath = __DIR__ . '/../src/Math';
+$sourceNamespace = "PHPR\\Math";
+
+/**
+ * Code Gen Helper to generate left right vec calc
+ */
+function codeGenSimpleLeftRight(array $properties, string $operator) : string
+{
+    $buffer = "";
+
+    foreach($properties as $p) {
+        $buffer .= "        \$result->{$p} = \$left->{$p} {$operator} \$right->{$p};" . PHP_EOL;
+    }
+
+    return $buffer;
+}
+
+function codeGenSimpleLeftRightScalar(array $properties, string $operator) : string
+{
+    $buffer = "";
+
+    foreach($properties as $p) {
+        $buffer .= "        \$result->{$p} = \$left->{$p} {$operator} \$value;" . PHP_EOL;
+    }
+
+    return $buffer;
+}
+
+function codeGenPerProperty(array $properties, string $template) : string
+{
+    $buffer = "";
+    foreach($properties as $property) {
+        $buffer .= str_replace('{{p}}', $property, $template);
+    }
+
+    return $buffer;
+}
+
+foreach($genClasses as $classConf)
+{
+    // extract the gen properties
+    extract($classConf);
+
+    // set soruce file
+    $soruceFile = $sourcePath . '/' . $name . '.php';
+
+    // empty argument string of values
+    $argStringZeroValues = implode(', ', array_fill(0, count($properties), 0));
+
+    // create result var if not exists gen
+    $codeMakeResultIfNot = "if (is_null(\$result)) \$result = new {$name}({$argStringZeroValues});";
+
+$buffer = <<<EOD
+<?php
+
+namespace {$sourceNamespace};
+
+class {$name} 
+{
+EOD;
+
+    /** 
+     * Class properties
+     */
+    foreach($properties as $p)
+    {
+$buffer .= <<<EOD
+
+    /**
+     * {$p} value
+     * 
+     * @var {$dataType}
+     */
+    public {$dataType} \${$p};\n
+EOD;
+    }
+
+    /**
+     * Constructor
+     * 
+     * ---------------------------------
+     */
+    $cargs = implode(', ', array_map(function($p) use($dataType) {
+        return "{$dataType} \${$p}";
+    }, $properties));
+
+    $commentParams = trim(codeGenPerProperty($properties, "     * @param {$dataType}         \${{p}}\n"));
+
+$buffer .= <<<EOD
+    
+    /**
+     * Constructor
+     *
+     {$commentParams}
+     */
+    public function __construct({$cargs}) 
+    {\n
+EOD;
+    
+    foreach($properties as $p)
+    {
+$buffer .= <<<EOD
+        \$this->{$p} = \${$p};\n
+EOD;
+    }
+
+    $buffer .= "    }\n";
+
+
+    /**
+     * length function
+     * 
+     * ---------------------------------
+     */
+    $fargs = implode(' + ', array_map(function($p) use($dataType) {
+        return "\$this->{$p} * \$this->{$p}";
+    }, $properties));
+
+$buffer .= <<<EOD
+
+    /**
+     * Vector length
+     *
+     * @return {$dataType}
+     */
+    public function length() : {$dataType}
+    {
+        return sqrt({$fargs});
+    }\n
+EOD;
+
+
+    /**
+     * normalize function
+     * 
+     * ---------------------------------
+     */
+    $functionCode = codeGenPerProperty($properties, 
+        "           \$result->{{p}} = \$vector->{{p}} * \$length;\n"
+    );
+    $functionCodeZero = codeGenPerProperty($properties, 
+        "           \$result->{{p}} = 0;\n"
+    );
+
+$buffer .= <<<EOD
+
+    /**
+     * Normalize the given vector
+     *
+     * @param {$name}           \$vector The vector to base the normalization on.
+     * @param {$name}|null      \$result The vector the result is written to.
+     *
+     * @return {$name}                   The result vector. 
+     */
+    public static function _normalize({$name} \$vector, ?{$name} &\$result = null) : {$name}
+    {
+        {$codeMakeResultIfNot}
+
+        \$length = \$vector->length();
+
+        if (\$length > 0) {
+            \$length = 1 / \$length;
+{$functionCode}
+        } else { 
+{$functionCodeZero}
+        }
+
+        return \$result;
+    }
+
+    /**
+     * Normalize the current vector
+     *
+     * @return self
+     */
+    public function normalize()
+    {
+        {$name}::_normalize(\$this, \$this); return \$this;
+    }\n
+EOD;
+
+    /**
+     * Dot product
+     * 
+     * ---------------------------------
+     */
+    $fargs = implode(' + ', array_map(function($p) use($dataType) {
+        return "\$left->{$p} * \$right->{$p}";
+    }, $properties));
+
+    $buffer .= <<<EOD
+    
+    /**
+     * Vector dot product
+     */
+    public static function _dot({$name} \$left, {$name} \$right) : {$dataType}
+    {   
+        return $fargs;
+    }
+
+    /**
+     * Vector dot product
+     */
+    public function dot({$name} \$right) : {$dataType}
+    {
+        return {$name}::_dot(\$this, \$right);
+    }\n
+EOD;
+
+    /**
+     * Distance
+     * 
+     * ---------------------------------
+     */
+    $fargs = implode(" + ", array_map(function($p) use($dataType) {
+        return "\n          (\$left->{$p} - \$right->{$p}) * (\$left->{$p} - \$right->{$p})";
+    }, $properties));
+
+    $buffer .= <<<EOD
+    
+    /**
+     * Vector dot product
+     */
+    public static function _distance({$name} \$left, {$name} \$right) : {$dataType}
+    {   
+        return sqrt($fargs);
+    }
+
+    /**
+     * Vector dot product
+     */
+    public function distance({$name} \$right) : {$dataType}
+    {
+        return {$name}::_distance(\$this, \$right);
+    }\n
+EOD;
+
+    /**
+     * Add function
+     * 
+     * ---------------------------------
+     */
+    $functionCode = codeGenSimpleLeftRight($properties, '+');
+    $buffer .= <<<EOD
+    
+    /**
+     * Add two vectors together
+     */
+    public static function _add({$name} \$left, {$name} \$right, ?{$name} &\$result = null)
+    {
+        {$codeMakeResultIfNot}
+        
+{$functionCode}
+        return \$result;
+    }
+    
+    /**
+     * Add a vector to the current one
+     */
+    public function add({$name} \$right)
+    {
+        {$name}::_add(\$this, \$right, \$this); return \$this;
+    }\n
+EOD;
+
+    /**
+     * Substract function
+     * 
+     * ---------------------------------
+     */
+    $functionCode = codeGenSimpleLeftRight($properties, '-');
+    $buffer .= <<<EOD
+    
+    /**
+     * Substract a vector of another one
+     */
+    public static function _substract({$name} \$left, {$name} \$right, ?{$name} &\$result = null)
+    {
+        {$codeMakeResultIfNot}
+        
+{$functionCode}
+        return \$result;
+    }
+
+    /**
+     * Substract a vector to the current one
+     */
+    public function substract({$name} \$right)
+    {
+        {$name}::_substract(\$this, \$right, \$this); return \$this;
+    }\n
+EOD;
+
+    /**
+     * Multiply function
+     * 
+     * ---------------------------------
+     */
+    $functionCode = codeGenSimpleLeftRightScalar($properties, '*');
+    $buffer .= <<<EOD
+    
+    /**
+     * Multiply a vector by a scalar value
+     */
+    public static function _multiply({$name} \$left, {$dataType} \$value, ?{$name} &\$result = null)
+    {
+        {$codeMakeResultIfNot}
+        
+{$functionCode}
+        return \$result;
+    }
+
+    /**
+     * Multiply the current vector by a scalar value
+     */
+    public function multiply({$dataType} \$value)
+    {
+        {$name}::_multiply(\$this, \$value, \$this); return \$this;
+    }\n
+EOD;
+
+    /**
+     * Divide function
+     * 
+     * ---------------------------------
+     */
+    $functionCode = codeGenSimpleLeftRightScalar($properties, '/');
+    $buffer .= <<<EOD
+    
+    /**
+     * Divide a vector by a scalar value
+     */
+    public static function _divide({$name} \$left, {$dataType} \$value, ?{$name} &\$result = null)
+    {
+        if (\$value == 0) throw new \Exception("Division by zero. Please don't...");
+
+        {$codeMakeResultIfNot}
+        
+{$functionCode}
+        return \$result;
+    }
+
+    /**
+     * Divide the current vector by a scalar value
+     */
+    public function divide({$dataType} \$value)
+    {
+        {$name}::_divide(\$this, \$value, \$this); return \$this;
+    }\n
+EOD;
+
+
+ 
+
+    /**
+     * To color Int
+     * 
+     * ---------------------------------
+     */
+    $buffer .= <<<EOD
+
+    /**
+     * Converts the vector into an integer representing a color or anything you want it to be 
+     */
+    public function toColorInt() : int
+    {
+        return
+EOD;
+    $start = (count($properties) - 1) * 8;
+
+    foreach($properties as $p)
+    {
+        if ($start >= 8) {
+            $buffer .= " ((\$this->{$p} * 255 & 0xff) << {$start}) +";
+        } else {
+            $buffer .= " (\$this->{$p} * 255  & 0xff);\n    }\n";
+        }
+
+        $start -= 8;
+    }
+
+    /**
+     * Raw
+     * 
+     * ---------------------------------
+     */
+    $rawPropString = implode(', ', array_map(function($p) use($dataType) {
+        return "\$this->{$p}";
+    }, $properties));
+
+$buffer .= <<<EOD
+
+    /**
+     * Just return the data as array
+     */
+    public function raw() : array
+    {
+        return [{$rawPropString}];
+    }\n
+EOD;
+    
+
+    /**
+     * Write file
+     * 
+     * ---------------------------------
+     */
+    $buffer .= "}\n";
+    echo " -> writing " . $name . PHP_EOL;
+    file_put_contents($soruceFile, $buffer);
+}
