@@ -127,6 +127,24 @@ class Rasterizer
     }
 
     /** 
+     * Raster a triangles outline in buffer cords
+     *
+     * @param int           $x1
+     * @param int           $y1
+     * @param int           $x2
+     * @param int           $y2
+     * @param int           $x3
+     * @param int           $y3
+     * @param array         $pixels 
+     */
+    public function rasterTriangleLine(int $x1, int $y1, int $x2, int $y2, int $x3, int $y3, ?array &$pixels)
+    {
+        $this->rasterLine($x1, $y1, $x2, $y2, $pixels, true);
+        $this->rasterLine($x2, $y2, $x3, $y3, $pixels, true);
+        $this->rasterLine($x3, $y3, $x1, $y1, $pixels, true);
+    }
+
+    /** 
      * Raster a triangle in buffer cords
      *
      * @param int           $x1
