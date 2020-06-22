@@ -12,20 +12,43 @@ class VertexArray
     public array $vertices = [];
 
     /**
-     * An array of vertex attributes for the current vertex array
+     * Vertex class
      */
-    private array $vertexAttributes = [];
+    private string $vertexClass;
 
-    public function getAttributesForVertex()
+    /**
+     * Construct a vertex array
+     *
+     * @param string            $vertexClass
+     * @param array             $data
+     */
+    public function __construct(string $vertexClass, array $data)
     {
-        
+        $this->vertexClass = $vertexClass;
+        $this->appendData($data);
     }
 
     /**
-     * 
+     * Add an array of data 
+     *
+     * @param array                 $data
      */
-    public function interpolatedAttributes() : array
+    public function appendData(array $data)
     {
-        
+        $vc = $this->vertexClass;
+
+        $chunks = array_chunk($data, $vc::size());
+
+        foreach($chunks as $list) {
+            $this->vertices[] = $vc::list($list);
+        }
+    }
+
+    /**
+     * Get all vertices
+     */
+    public function getVertices() : array
+    {
+        return $this->vertices;
     }
 }

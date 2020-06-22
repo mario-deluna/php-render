@@ -5,6 +5,7 @@ namespace PHPR;
 use PHPR\Shader\Shader;
 
 use PHPR\Mesh\Vertex;
+use PHPR\Mesh\VertexArray;
 use PHPR\Buffer\Buffer2D;
 
 use PHPR\Math\Vec3;
@@ -25,6 +26,13 @@ class Context
      * Depth Buffer
      */
     private Buffer2D $depthBuffer;
+
+    /** 
+     * Current context draw mode 
+     */
+    const DRAW_MODE_NORMAL = 0;
+    const DRAW_MODE_LINES = 1;
+    private int $drawMode = 0;
 
     /**
      * An array of attached buffers
@@ -65,6 +73,16 @@ class Context
     public function getHeight() : int
     {
         return $this->height;
+    }
+
+    /**
+     * Set the context draw mode
+     *
+     * @param int           $drawMode
+     */
+    public function setDrawMode(int $drawMode)
+    {
+        $this->drawMode = $drawMode;
     }
 
     /**
@@ -178,12 +196,28 @@ class Context
         $this->shader->vertex($v3, $vOut3);
 
         // rasterize the triangle
-        $this->rasterizer->rasterTriangle(
-            $x1, $y1, 
-            $x2, $y2, 
-            $x3, $y3, 
-            $pixels
-        );
+        if ($this->drawMode === static::DRAW_MODE_NORMAL)
+        {
+            $this->rasterizer->rasterTriangle(
+                $x1, $y1, 
+                $x2, $y2, 
+                $x3, $y3, 
+                $pixels
+            );
+        }
+        elseif ($this->drawMode === static::DRAW_MODE_LINES)
+        {
+            $this->rasterizer->rasterTriangleLine(
+                $x1, $y1, 
+                $x2, $y2, 
+                $x3, $y3, 
+                $pixels
+            );
+        }
+        else 
+        {
+            throw new \Exception("Invalid drawing mode: " . $this->drawMode);
+        }
 
         // calculate vertex weights
         $vw = $this->rasterizer->getVertexContributionForPixels(
@@ -236,10 +270,16 @@ class Context
     }
 
     /**
-     * Draw single triangle
+     * Draw a vertex array
+     *
+     * @param VertexArray           $va 
      */
-    public function drawVertexArray()
+    public function drawVertexArray(VertexArray $va)
     {
+        $triangles = array_chunk($va->getVertices(), 3);
 
+        foreach($triangles as &$triangle) {
+            $this->drawTriangle($triangle[0], $triangle[1], $triangle[2]);
+        }
     }
 }
