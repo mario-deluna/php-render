@@ -16,6 +16,48 @@ class IVec4
         $this->z = $z;
         $this->w = $w;
     }
+
+    /**
+     * Vector length
+     */
+    public function length() : int
+    {
+        return sqrt($this->x * $this->x + $this->y * $this->y + $this->z * $this->z + $this->w * $this->w);
+    }
+
+    /**
+     * Normalize the given vector
+     */
+    public static function _normalize(IVec4 $vector, ?IVec4 &$result = null)
+    {
+        if (is_null($result)) $result = new IVec4(0, 0, 0, 0);
+
+        $length = $vector->length();
+
+        if ($length > 0) { 
+           $result->x = $vector->x / $length;
+           $result->y = $vector->y / $length;
+           $result->z = $vector->z / $length;
+           $result->w = $vector->w / $length;
+
+        } else { 
+           $result->x = 0;
+           $result->y = 0;
+           $result->z = 0;
+           $result->w = 0;
+
+        }
+
+        return $result;
+    }
+
+    /**
+     * Normalize the current vector
+     */
+    public function normalize()
+    {
+        IVec4::_normalize($this, $this); return $this;
+    }
     
     /**
      * Add two vectors together
