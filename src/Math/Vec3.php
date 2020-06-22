@@ -90,7 +90,12 @@ class Vec3
     }
     
     /**
-     * Vector dot product
+     * Dot Product
+     *
+     * @param Vec3           $left
+     * @param Vec3           $right
+     *
+     * @return float
      */
     public static function _dot(Vec3 $left, Vec3 $right) : float
     {   
@@ -98,7 +103,10 @@ class Vec3
     }
 
     /**
-     * Vector dot product
+     * Dot product with self
+     *
+     * @param Vec3               $right
+     * @return float
      */
     public function dot(Vec3 $right) : float
     {
@@ -106,7 +114,12 @@ class Vec3
     }
     
     /**
-     * Vector dot product
+     * Distance
+     *
+     * @param Vec3           $left
+     * @param Vec3           $right
+     *
+     * @return float
      */
     public static function _distance(Vec3 $left, Vec3 $right) : float
     {   
@@ -117,17 +130,26 @@ class Vec3
     }
 
     /**
-     * Vector dot product
+     * Distance from self
+     *
+     * @param Vec3               $right
+     * @return float
      */
     public function distance(Vec3 $right) : float
     {
         return Vec3::_distance($this, $right);
     }
-    
+
     /**
-     * Add two vectors together
+     *  Add two vectors together
+     *
+     * @param Vec3           $left
+     * @param Vec3           $right
+     * @param Vec3|null      $result The vector the result is written to.
+     *
+     * @return Vec3                   The result vector. 
      */
-    public static function _add(Vec3 $left, Vec3 $right, ?Vec3 &$result = null)
+    public static function _add(Vec3 $left, Vec3 $right, ?Vec3 &$result = null) : Vec3
     {
         if (is_null($result)) $result = new Vec3(0, 0, 0);
         
@@ -140,6 +162,9 @@ class Vec3
     
     /**
      * Add a vector to the current one
+     *
+     * @param Vec3               $right 
+     * @return self
      */
     public function add(Vec3 $right)
     {
@@ -147,7 +172,13 @@ class Vec3
     }
     
     /**
-     * Substract a vector of another one
+     *  Substract a vector of another one
+     *
+     * @param Vec3           $left
+     * @param Vec3           $right
+     * @param Vec3|null      $result The vector the result is written to.
+     *
+     * @return Vec3                   The result vector. 
      */
     public static function _substract(Vec3 $left, Vec3 $right, ?Vec3 &$result = null)
     {
@@ -162,6 +193,9 @@ class Vec3
 
     /**
      * Substract a vector to the current one
+     *
+     * @param Vec3               $right 
+     * @return self
      */
     public function substract(Vec3 $right)
     {

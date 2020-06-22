@@ -79,7 +79,12 @@ class IVec2
     }
     
     /**
-     * Vector dot product
+     * Dot Product
+     *
+     * @param IVec2           $left
+     * @param IVec2           $right
+     *
+     * @return int
      */
     public static function _dot(IVec2 $left, IVec2 $right) : int
     {   
@@ -87,7 +92,10 @@ class IVec2
     }
 
     /**
-     * Vector dot product
+     * Dot product with self
+     *
+     * @param IVec2               $right
+     * @return int
      */
     public function dot(IVec2 $right) : int
     {
@@ -95,7 +103,12 @@ class IVec2
     }
     
     /**
-     * Vector dot product
+     * Distance
+     *
+     * @param IVec2           $left
+     * @param IVec2           $right
+     *
+     * @return int
      */
     public static function _distance(IVec2 $left, IVec2 $right) : int
     {   
@@ -105,17 +118,26 @@ class IVec2
     }
 
     /**
-     * Vector dot product
+     * Distance from self
+     *
+     * @param IVec2               $right
+     * @return int
      */
     public function distance(IVec2 $right) : int
     {
         return IVec2::_distance($this, $right);
     }
-    
+
     /**
-     * Add two vectors together
+     *  Add two vectors together
+     *
+     * @param IVec2           $left
+     * @param IVec2           $right
+     * @param IVec2|null      $result The vector the result is written to.
+     *
+     * @return IVec2                   The result vector. 
      */
-    public static function _add(IVec2 $left, IVec2 $right, ?IVec2 &$result = null)
+    public static function _add(IVec2 $left, IVec2 $right, ?IVec2 &$result = null) : IVec2
     {
         if (is_null($result)) $result = new IVec2(0, 0);
         
@@ -127,6 +149,9 @@ class IVec2
     
     /**
      * Add a vector to the current one
+     *
+     * @param IVec2               $right 
+     * @return self
      */
     public function add(IVec2 $right)
     {
@@ -134,7 +159,13 @@ class IVec2
     }
     
     /**
-     * Substract a vector of another one
+     *  Substract a vector of another one
+     *
+     * @param IVec2           $left
+     * @param IVec2           $right
+     * @param IVec2|null      $result The vector the result is written to.
+     *
+     * @return IVec2                   The result vector. 
      */
     public static function _substract(IVec2 $left, IVec2 $right, ?IVec2 &$result = null)
     {
@@ -148,6 +179,9 @@ class IVec2
 
     /**
      * Substract a vector to the current one
+     *
+     * @param IVec2               $right 
+     * @return self
      */
     public function substract(IVec2 $right)
     {

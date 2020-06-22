@@ -101,7 +101,12 @@ class Vec4
     }
     
     /**
-     * Vector dot product
+     * Dot Product
+     *
+     * @param Vec4           $left
+     * @param Vec4           $right
+     *
+     * @return float
      */
     public static function _dot(Vec4 $left, Vec4 $right) : float
     {   
@@ -109,7 +114,10 @@ class Vec4
     }
 
     /**
-     * Vector dot product
+     * Dot product with self
+     *
+     * @param Vec4               $right
+     * @return float
      */
     public function dot(Vec4 $right) : float
     {
@@ -117,7 +125,12 @@ class Vec4
     }
     
     /**
-     * Vector dot product
+     * Distance
+     *
+     * @param Vec4           $left
+     * @param Vec4           $right
+     *
+     * @return float
      */
     public static function _distance(Vec4 $left, Vec4 $right) : float
     {   
@@ -129,17 +142,26 @@ class Vec4
     }
 
     /**
-     * Vector dot product
+     * Distance from self
+     *
+     * @param Vec4               $right
+     * @return float
      */
     public function distance(Vec4 $right) : float
     {
         return Vec4::_distance($this, $right);
     }
-    
+
     /**
-     * Add two vectors together
+     *  Add two vectors together
+     *
+     * @param Vec4           $left
+     * @param Vec4           $right
+     * @param Vec4|null      $result The vector the result is written to.
+     *
+     * @return Vec4                   The result vector. 
      */
-    public static function _add(Vec4 $left, Vec4 $right, ?Vec4 &$result = null)
+    public static function _add(Vec4 $left, Vec4 $right, ?Vec4 &$result = null) : Vec4
     {
         if (is_null($result)) $result = new Vec4(0, 0, 0, 0);
         
@@ -153,6 +175,9 @@ class Vec4
     
     /**
      * Add a vector to the current one
+     *
+     * @param Vec4               $right 
+     * @return self
      */
     public function add(Vec4 $right)
     {
@@ -160,7 +185,13 @@ class Vec4
     }
     
     /**
-     * Substract a vector of another one
+     *  Substract a vector of another one
+     *
+     * @param Vec4           $left
+     * @param Vec4           $right
+     * @param Vec4|null      $result The vector the result is written to.
+     *
+     * @return Vec4                   The result vector. 
      */
     public static function _substract(Vec4 $left, Vec4 $right, ?Vec4 &$result = null)
     {
@@ -176,6 +207,9 @@ class Vec4
 
     /**
      * Substract a vector to the current one
+     *
+     * @param Vec4               $right 
+     * @return self
      */
     public function substract(Vec4 $right)
     {
