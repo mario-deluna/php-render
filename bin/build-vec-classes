@@ -104,7 +104,7 @@ $buffer = <<<EOD
 namespace {$sourceNamespace};
 
 class {$name} 
-{\n
+{
 EOD;
 
     /** 
@@ -113,6 +113,12 @@ EOD;
     foreach($properties as $p)
     {
 $buffer .= <<<EOD
+
+    /**
+     * {$p} value
+     * 
+     * @var {$dataType}
+     */
     public {$dataType} \${$p};\n
 EOD;
     }
@@ -126,8 +132,15 @@ EOD;
         return "{$dataType} \${$p}";
     }, $properties));
 
-$buffer .= <<<EOD
+    $commentParams = trim(codeGenPerProperty($properties, "     * @param {$dataType}         \${{p}}\n"));
 
+$buffer .= <<<EOD
+    
+    /**
+     * Constructor
+     *
+     {$commentParams}
+     */
     public function __construct({$cargs}) 
     {\n
 EOD;
@@ -155,6 +168,8 @@ $buffer .= <<<EOD
 
     /**
      * Vector length
+     *
+     * @return {$dataType}
      */
     public function length() : {$dataType}
     {
@@ -179,8 +194,13 @@ $buffer .= <<<EOD
 
     /**
      * Normalize the given vector
+     *
+     * @param {$name}           \$vector The vector to base the normalization on.
+     * @param {$name}|null      \$result The vector the result is written to.
+     *
+     * @return {$name}                   The result vector. 
      */
-    public static function _normalize({$name} \$vector, ?{$name} &\$result = null)
+    public static function _normalize({$name} \$vector, ?{$name} &\$result = null) : {$name}
     {
         {$codeMakeResultIfNot}
 
@@ -198,6 +218,8 @@ $buffer .= <<<EOD
 
     /**
      * Normalize the current vector
+     *
+     * @return self
      */
     public function normalize()
     {

@@ -4,10 +4,34 @@ namespace PHPR\Math;
 
 class Vec3 
 {
+    /**
+     * x value
+     * 
+     * @var float
+     */
     public float $x;
-    public float $y;
-    public float $z;
 
+    /**
+     * y value
+     * 
+     * @var float
+     */
+    public float $y;
+
+    /**
+     * z value
+     * 
+     * @var float
+     */
+    public float $z;
+    
+    /**
+     * Constructor
+     *
+     * @param float         $x
+     * @param float         $y
+     * @param float         $z
+     */
     public function __construct(float $x, float $y, float $z) 
     {
         $this->x = $x;
@@ -17,6 +41,8 @@ class Vec3
 
     /**
      * Vector length
+     *
+     * @return float
      */
     public function length() : float
     {
@@ -25,8 +51,13 @@ class Vec3
 
     /**
      * Normalize the given vector
+     *
+     * @param Vec3           $vector The vector to base the normalization on.
+     * @param Vec3|null      $result The vector the result is written to.
+     *
+     * @return Vec3                   The result vector. 
      */
-    public static function _normalize(Vec3 $vector, ?Vec3 &$result = null)
+    public static function _normalize(Vec3 $vector, ?Vec3 &$result = null) : Vec3
     {
         if (is_null($result)) $result = new Vec3(0, 0, 0);
 
@@ -50,6 +81,8 @@ class Vec3
 
     /**
      * Normalize the current vector
+     *
+     * @return self
      */
     public function normalize()
     {
