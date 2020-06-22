@@ -2,29 +2,32 @@
 
 namespace PHPR\Math;
 
-class Vec3 
+class Vec4 
 {
     public float $x;
     public float $y;
     public float $z;
+    public float $w;
 
-    public function __construct(float $x, float $y, float $z) 
+    public function __construct(float $x, float $y, float $z, float $w) 
     {
         $this->x = $x;
         $this->y = $y;
         $this->z = $z;
+        $this->w = $w;
     }
     
     /**
      * Add two vectors together
      */
-    public static function _add(Vec3 $left, Vec3 $right, ?Vec3 &$result = null)
+    public static function _add(Vec4 $left, Vec4 $right, ?Vec4 &$result = null)
     {
-        if (is_null($result)) $result = new Vec3(0, 0, 0);
+        if (is_null($result)) $result = new Vec4(0, 0, 0, 0);
         
         $result->x = $left->x + $right->x;
         $result->y = $left->y + $right->y;
         $result->z = $left->z + $right->z;
+        $result->w = $left->w + $right->w;
 
         return $result;
     }
@@ -32,21 +35,22 @@ class Vec3
     /**
      * Add a vector to the current one
      */
-    public function add(Vec3 $right)
+    public function add(Vec4 $right)
     {
-        Vec3::_add($this, $right, $this); return $this;
+        Vec4::_add($this, $right, $this); return $this;
     }
     
     /**
      * Substract a vector of another one
      */
-    public static function _substract(Vec3 $left, Vec3 $right, ?Vec3 &$result = null)
+    public static function _substract(Vec4 $left, Vec4 $right, ?Vec4 &$result = null)
     {
-        if (is_null($result)) $result = new Vec3(0, 0, 0);
+        if (is_null($result)) $result = new Vec4(0, 0, 0, 0);
         
         $result->x = $left->x - $right->x;
         $result->y = $left->y - $right->y;
         $result->z = $left->z - $right->z;
+        $result->w = $left->w - $right->w;
 
         return $result;
     }
@@ -54,21 +58,22 @@ class Vec3
     /**
      * Substract a vector to the current one
      */
-    public function substract(Vec3 $right)
+    public function substract(Vec4 $right)
     {
-        Vec3::_substract($this, $right, $this); return $this;
+        Vec4::_substract($this, $right, $this); return $this;
     }
     
     /**
      * Multiply a vector by a scalar value
      */
-    public static function _multiply(Vec3 $left, float $value, ?Vec3 &$result = null)
+    public static function _multiply(Vec4 $left, float $value, ?Vec4 &$result = null)
     {
-        if (is_null($result)) $result = new Vec3(0, 0, 0);
+        if (is_null($result)) $result = new Vec4(0, 0, 0, 0);
         
         $result->x = $left->x * $value;
         $result->y = $left->y * $value;
         $result->z = $left->z * $value;
+        $result->w = $left->w * $value;
 
         return $result;
     }
@@ -78,21 +83,22 @@ class Vec3
      */
     public function multiply(float $value)
     {
-        Vec3::_multiply($this, $value, $this); return $this;
+        Vec4::_multiply($this, $value, $this); return $this;
     }
     
     /**
      * Divide a vector by a scalar value
      */
-    public static function _divide(Vec3 $left, float $value, ?Vec3 &$result = null)
+    public static function _divide(Vec4 $left, float $value, ?Vec4 &$result = null)
     {
         if ($value == 0) throw new \Exception("Division by zero. Please don't...");
 
-        if (is_null($result)) $result = new Vec3(0, 0, 0);
+        if (is_null($result)) $result = new Vec4(0, 0, 0, 0);
         
         $result->x = $left->x / $value;
         $result->y = $left->y / $value;
         $result->z = $left->z / $value;
+        $result->w = $left->w / $value;
 
         return $result;
     }
@@ -102,7 +108,7 @@ class Vec3
      */
     public function divide(float $value)
     {
-        Vec3::_divide($this, $value, $this); return $this;
+        Vec4::_divide($this, $value, $this); return $this;
     }
 
     /**
@@ -110,7 +116,7 @@ class Vec3
      */
     public function toColorInt() : int
     {
-        return (($this->x * 255 & 0xff) << 16) + (($this->y * 255 & 0xff) << 8) + ($this->z * 255  & 0xff);
+        return (($this->x * 255 & 0xff) << 24) + (($this->y * 255 & 0xff) << 16) + (($this->z * 255 & 0xff) << 8) + ($this->w * 255  & 0xff);
     }
 
     /**
@@ -118,6 +124,6 @@ class Vec3
      */
     public function raw() : array
     {
-        return [$this->x, $this->y, $this->z];
+        return [$this->x, $this->y, $this->z, $this->w];
     }
 }
