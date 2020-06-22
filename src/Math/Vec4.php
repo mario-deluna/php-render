@@ -217,7 +217,13 @@ class Vec4
     }
     
     /**
-     * Multiply a vector by a scalar value
+     *  Multiply a vector by a scalar value
+     *
+     * @param Vec4           $left
+     * @param float       $value
+     * @param Vec4|null      $result The vector the result is written to.
+     *
+     * @return Vec4                   The result vector. 
      */
     public static function _multiply(Vec4 $left, float $value, ?Vec4 &$result = null)
     {
@@ -233,6 +239,9 @@ class Vec4
 
     /**
      * Multiply the current vector by a scalar value
+     *
+     * @param float       $value
+     * @return self
      */
     public function multiply(float $value)
     {
@@ -240,7 +249,13 @@ class Vec4
     }
     
     /**
-     * Divide a vector by a scalar value
+     *  Divide a vector by a scalar value
+     *
+     * @param Vec4           $left
+     * @param float       $value
+     * @param Vec4|null      $result The vector the result is written to.
+     *
+     * @return Vec4                   The result vector. 
      */
     public static function _divide(Vec4 $left, float $value, ?Vec4 &$result = null)
     {
@@ -258,6 +273,9 @@ class Vec4
 
     /**
      * Divide the current vector by a scalar value
+     *
+     * @param float       $value
+     * @return self
      */
     public function divide(float $value)
     {
@@ -266,6 +284,8 @@ class Vec4
 
     /**
      * Converts the vector into an integer representing a color or anything you want it to be 
+     *
+     * @return int
      */
     public function toColorInt() : int
     {
@@ -274,6 +294,8 @@ class Vec4
 
     /**
      * Just return the data as array
+     *
+     * @return array
      */
     public function raw() : array
     {
