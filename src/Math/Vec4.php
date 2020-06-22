@@ -34,11 +34,12 @@ class Vec4
 
         $length = $vector->length();
 
-        if ($length > 0) { 
-           $result->x = $vector->x / $length;
-           $result->y = $vector->y / $length;
-           $result->z = $vector->z / $length;
-           $result->w = $vector->w / $length;
+        if ($length > 0) {
+            $length = 1 / $length;
+           $result->x = $vector->x * $length;
+           $result->y = $vector->y * $length;
+           $result->z = $vector->z * $length;
+           $result->w = $vector->w * $length;
 
         } else { 
            $result->x = 0;
@@ -57,6 +58,42 @@ class Vec4
     public function normalize()
     {
         Vec4::_normalize($this, $this); return $this;
+    }
+    
+    /**
+     * Vector dot product
+     */
+    public static function _dot(Vec4 $left, Vec4 $right) : float
+    {   
+        return $left->x * $right->x + $left->y * $right->y + $left->z * $right->z + $left->w * $right->w;
+    }
+
+    /**
+     * Vector dot product
+     */
+    public function dot(Vec4 $right) : float
+    {
+        return Vec4::_dot($this, $right);
+    }
+    
+    /**
+     * Vector dot product
+     */
+    public static function _distance(Vec4 $left, Vec4 $right) : float
+    {   
+        return sqrt(
+          ($left->x - $right->x) * ($left->x - $right->x) + 
+          ($left->y - $right->y) * ($left->y - $right->y) + 
+          ($left->z - $right->z) * ($left->z - $right->z) + 
+          ($left->w - $right->w) * ($left->w - $right->w));
+    }
+
+    /**
+     * Vector dot product
+     */
+    public function distance(Vec4 $right) : float
+    {
+        return Vec4::_distance($this, $right);
     }
     
     /**
