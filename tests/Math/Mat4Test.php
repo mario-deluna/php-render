@@ -35,4 +35,16 @@ class Mat4Test extends \PHPUnit\Framework\TestCase
             0.0, 0.0, 0.0, 1.0,
         ], $m->raw());
     }
+
+    public function testMultiply()
+    {
+        $m = new Mat4;
+        $this->assertEquals(
+        [
+            2.0, 0.0, 0.0, 0.0,
+            0.0, 2.0, 0.0, 0.0,
+            0.0, 0.0, 2.0, 0.0,
+            0.0, 0.0, 0.0, 2.0,
+        ], $m->multiplyScalar(2)->raw());
+    }
 }
