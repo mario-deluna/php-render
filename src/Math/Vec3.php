@@ -14,6 +14,46 @@ class Vec3
         $this->y = $y;
         $this->z = $z;
     }
+
+    /**
+     * Vector length
+     */
+    public function length() : float
+    {
+        return sqrt($this->x * $this->x + $this->y * $this->y + $this->z * $this->z);
+    }
+
+    /**
+     * Normalize the given vector
+     */
+    public static function _normalize(Vec3 $vector, ?Vec3 &$result = null)
+    {
+        if (is_null($result)) $result = new Vec3(0, 0, 0);
+
+        $length = $vector->length();
+
+        if ($length > 0) { 
+           $result->x = $vector->x / $length;
+           $result->y = $vector->y / $length;
+           $result->z = $vector->z / $length;
+
+        } else { 
+           $result->x = 0;
+           $result->y = 0;
+           $result->z = 0;
+
+        }
+
+        return $result;
+    }
+
+    /**
+     * Normalize the current vector
+     */
+    public function normalize()
+    {
+        Vec3::_normalize($this, $this); return $this;
+    }
     
     /**
      * Add two vectors together

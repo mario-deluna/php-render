@@ -7,6 +7,9 @@
  * 
  * The vector classes are very similar so it makes sense to generate them.
  * Thats what this script is for, so don't change the files directly please.
+ *
+ * https://github.com/adriengivry/Overload/blob/develop/Sources/Overload/OvMaths/src/OvMaths/FVector3.cpp
+ * https://github.com/Ponup/glm/blob/master/src/vec3.php
  */
 $genClasses = [
     [
@@ -71,6 +74,15 @@ function codeGenSimpleLeftRightScalar(array $properties, string $operator) : str
     return $buffer;
 }
 
+function codeGenPerProperty(array $properties, string $template) : string
+{
+    $buffer = "";
+    foreach($properties as $property) {
+        $buffer .= str_replace('{{p}}', $property, $template);
+    }
+
+    return $buffer;
+}
 
 foreach($genClasses as $classConf)
 {
@@ -128,6 +140,70 @@ EOD;
     }
 
     $buffer .= "    }\n";
+
+
+    /**
+     * length function
+     * 
+     * ---------------------------------
+     */
+    $fargs = implode(' + ', array_map(function($p) use($dataType) {
+        return "\$this->{$p} * \$this->{$p}";
+    }, $properties));
+
+$buffer .= <<<EOD
+
+    /**
+     * Vector length
+     */
+    public function length() : {$dataType}
+    {
+        return sqrt({$fargs});
+    }\n
+EOD;
+
+
+    /**
+     * normalize function
+     * 
+     * ---------------------------------
+     */
+    $functionCode = codeGenPerProperty($properties, 
+        "           \$result->{{p}} = \$vector->{{p}} * \$length;\n"
+    );
+    $functionCodeZero = codeGenPerProperty($properties, 
+        "           \$result->{{p}} = 0;\n"
+    );
+
+$buffer .= <<<EOD
+
+    /**
+     * Normalize the given vector
+     */
+    public static function _normalize({$name} \$vector, ?{$name} &\$result = null)
+    {
+        {$codeMakeResultIfNot}
+
+        \$length = \$vector->length();
+
+        if (\$length > 0) {
+            \$length = 1 / \$length;
+{$functionCode}
+        } else { 
+{$functionCodeZero}
+        }
+
+        return \$result;
+    }
+
+    /**
+     * Normalize the current vector
+     */
+    public function normalize()
+    {
+        {$name}::_normalize(\$this, \$this); return \$this;
+    }\n
+EOD;
 
     /**
      * Add function
