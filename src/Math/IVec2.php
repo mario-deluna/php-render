@@ -4,9 +4,26 @@ namespace PHPR\Math;
 
 class IVec2 
 {
+    /**
+     * x value
+     * 
+     * @var int
+     */
     public int $x;
-    public int $y;
 
+    /**
+     * y value
+     * 
+     * @var int
+     */
+    public int $y;
+    
+    /**
+     * Constructor
+     *
+     * @param int         $x
+     * @param int         $y
+     */
     public function __construct(int $x, int $y) 
     {
         $this->x = $x;
@@ -15,6 +32,8 @@ class IVec2
 
     /**
      * Vector length
+     *
+     * @return int
      */
     public function length() : int
     {
@@ -23,8 +42,13 @@ class IVec2
 
     /**
      * Normalize the given vector
+     *
+     * @param IVec2           $vector The vector to base the normalization on.
+     * @param IVec2|null      $result The vector the result is written to.
+     *
+     * @return IVec2                   The result vector. 
      */
-    public static function _normalize(IVec2 $vector, ?IVec2 &$result = null)
+    public static function _normalize(IVec2 $vector, ?IVec2 &$result = null) : IVec2
     {
         if (is_null($result)) $result = new IVec2(0, 0);
 
@@ -46,6 +70,8 @@ class IVec2
 
     /**
      * Normalize the current vector
+     *
+     * @return self
      */
     public function normalize()
     {
