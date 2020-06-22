@@ -27,10 +27,10 @@ class Vec3Test extends \PHPUnit\Framework\TestCase
 
     public function testNormalize()
     {
-        $a = new Vec3(2, 1, 1);
+        $a = new Vec3(50, 0, 0);
         $a->normalize();
 
-        $this->assertEquals([3, 1, 0], $a->raw());
+        $this->assertEquals([1, 0, 0], $a->raw());
     }
 
     public function testSub()

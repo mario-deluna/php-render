@@ -30,9 +30,10 @@ class Vec2
 
         $length = $vector->length();
 
-        if ($length > 0) { 
-           $result->x = $vector->x / $length;
-           $result->y = $vector->y / $length;
+        if ($length > 0) {
+            $length = 1 / $length;
+           $result->x = $vector->x * $length;
+           $result->y = $vector->y * $length;
 
         } else { 
            $result->x = 0;
@@ -49,6 +50,40 @@ class Vec2
     public function normalize()
     {
         Vec2::_normalize($this, $this); return $this;
+    }
+    
+    /**
+     * Vector dot product
+     */
+    public static function _dot(Vec2 $left, Vec2 $right) : float
+    {   
+        return $left->x * $right->x + $left->y * $right->y;
+    }
+
+    /**
+     * Vector dot product
+     */
+    public function dot(Vec2 $right) : float
+    {
+        return Vec2::_dot($this, $right);
+    }
+    
+    /**
+     * Vector dot product
+     */
+    public static function _distance(Vec2 $left, Vec2 $right) : float
+    {   
+        return sqrt(
+          ($left->x - $right->x) * ($left->x - $right->x) + 
+          ($left->y - $right->y) * ($left->y - $right->y));
+    }
+
+    /**
+     * Vector dot product
+     */
+    public function distance(Vec2 $right) : float
+    {
+        return Vec2::_distance($this, $right);
     }
     
     /**
