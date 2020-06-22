@@ -32,10 +32,11 @@ class IVec3
 
         $length = $vector->length();
 
-        if ($length > 0) { 
-           $result->x = $vector->x / $length;
-           $result->y = $vector->y / $length;
-           $result->z = $vector->z / $length;
+        if ($length > 0) {
+            $length = 1 / $length;
+           $result->x = $vector->x * $length;
+           $result->y = $vector->y * $length;
+           $result->z = $vector->z * $length;
 
         } else { 
            $result->x = 0;
@@ -53,6 +54,41 @@ class IVec3
     public function normalize()
     {
         IVec3::_normalize($this, $this); return $this;
+    }
+    
+    /**
+     * Vector dot product
+     */
+    public static function _dot(IVec3 $left, IVec3 $right) : int
+    {   
+        return $left->x * $right->x + $left->y * $right->y + $left->z * $right->z;
+    }
+
+    /**
+     * Vector dot product
+     */
+    public function dot(IVec3 $right) : int
+    {
+        return IVec3::_dot($this, $right);
+    }
+    
+    /**
+     * Vector dot product
+     */
+    public static function _distance(IVec3 $left, IVec3 $right) : int
+    {   
+        return sqrt(
+          ($left->x - $right->x) * ($left->x - $right->x) + 
+          ($left->y - $right->y) * ($left->y - $right->y) + 
+          ($left->z - $right->z) * ($left->z - $right->z));
+    }
+
+    /**
+     * Vector dot product
+     */
+    public function distance(IVec3 $right) : int
+    {
+        return IVec3::_distance($this, $right);
     }
     
     /**

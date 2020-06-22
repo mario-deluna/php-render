@@ -206,6 +206,62 @@ $buffer .= <<<EOD
 EOD;
 
     /**
+     * Dot product
+     * 
+     * ---------------------------------
+     */
+    $fargs = implode(' + ', array_map(function($p) use($dataType) {
+        return "\$left->{$p} * \$right->{$p}";
+    }, $properties));
+
+    $buffer .= <<<EOD
+    
+    /**
+     * Vector dot product
+     */
+    public static function _dot({$name} \$left, {$name} \$right) : {$dataType}
+    {   
+        return $fargs;
+    }
+
+    /**
+     * Vector dot product
+     */
+    public function dot({$name} \$right) : {$dataType}
+    {
+        return {$name}::_dot(\$this, \$right);
+    }\n
+EOD;
+
+    /**
+     * Distance
+     * 
+     * ---------------------------------
+     */
+    $fargs = implode(" + ", array_map(function($p) use($dataType) {
+        return "\n          (\$left->{$p} - \$right->{$p}) * (\$left->{$p} - \$right->{$p})";
+    }, $properties));
+
+    $buffer .= <<<EOD
+    
+    /**
+     * Vector dot product
+     */
+    public static function _distance({$name} \$left, {$name} \$right) : {$dataType}
+    {   
+        return sqrt($fargs);
+    }
+
+    /**
+     * Vector dot product
+     */
+    public function distance({$name} \$right) : {$dataType}
+    {
+        return {$name}::_distance(\$this, \$right);
+    }\n
+EOD;
+
+    /**
      * Add function
      * 
      * ---------------------------------
@@ -318,6 +374,9 @@ EOD;
         {$name}::_divide(\$this, \$value, \$this); return \$this;
     }\n
 EOD;
+
+
+ 
 
     /**
      * To color Int

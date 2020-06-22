@@ -30,9 +30,10 @@ class IVec2
 
         $length = $vector->length();
 
-        if ($length > 0) { 
-           $result->x = $vector->x / $length;
-           $result->y = $vector->y / $length;
+        if ($length > 0) {
+            $length = 1 / $length;
+           $result->x = $vector->x * $length;
+           $result->y = $vector->y * $length;
 
         } else { 
            $result->x = 0;
@@ -49,6 +50,40 @@ class IVec2
     public function normalize()
     {
         IVec2::_normalize($this, $this); return $this;
+    }
+    
+    /**
+     * Vector dot product
+     */
+    public static function _dot(IVec2 $left, IVec2 $right) : int
+    {   
+        return $left->x * $right->x + $left->y * $right->y;
+    }
+
+    /**
+     * Vector dot product
+     */
+    public function dot(IVec2 $right) : int
+    {
+        return IVec2::_dot($this, $right);
+    }
+    
+    /**
+     * Vector dot product
+     */
+    public static function _distance(IVec2 $left, IVec2 $right) : int
+    {   
+        return sqrt(
+          ($left->x - $right->x) * ($left->x - $right->x) + 
+          ($left->y - $right->y) * ($left->y - $right->y));
+    }
+
+    /**
+     * Vector dot product
+     */
+    public function distance(IVec2 $right) : int
+    {
+        return IVec2::_distance($this, $right);
     }
     
     /**
