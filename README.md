@@ -2,7 +2,7 @@
 
 A 3D Software renderer in pure PHP.
 
- * No "pure" cheating with FFI.
+ * No "pure php" cheating with FFI.
  * Just download/clone and the renderer should just work.
  * Has Shader System in PHP.
  * Allows Custom vertex attributes with interpolation.
