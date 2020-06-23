@@ -257,6 +257,47 @@ class Mat4
     }
 
     /**
+     * Create an orthographic projection matrix
+     *
+     * @param flaot              $left 
+     * @param flaot              $right 
+     * @param flaot              $bottom 
+     * @param flaot              $top 
+     * @param flaot              $near 
+     * @param flaot              $far 
+     * @param Mat4|null          $result
+     *
+     * @return Mat4
+     */
+    public static function ortho(float $left, float $right, float $bottom, float $top, float $near, float $far, ?Mat4 &$result = null) : Mat4
+    {
+        if (is_null($result)) $result = new Mat4;
+        $resultValues = &$result->valueRef();
+
+        $resultValues[0] = -2 / ($left - $right);
+        $resultValues[1] = 0.0;
+        $resultValues[2] = 0.0;
+        $resultValues[3] = 0.0;
+        $resultValues[4] = 0.0;
+        $resultValues[5] = -2 / ($bottom - $top);
+        $resultValues[6] = 0.0;
+        $resultValues[7] = 0.0;
+        $resultValues[8] = 0.0;
+        $resultValues[9] = 0.0;
+        $resultValues[10] = 2 / ($near - $far);
+        $resultValues[11] = 0.0;
+        $resultValues[12] = -($right + $left) / ($right - $left);
+        //$resultValues[12] = ($left + $right) * ($left - $right);
+        $resultValues[13] = -($top + $bottom) / ($top - $bottom);
+        // $resultValues[13] = ($top + $bottom) * ($bottom - $top);
+        $resultValues[14] = -($far + $near) / ($far - $near);
+        // $resultValues[14] = ($far + $near) * ($near - $far);
+        $resultValues[15] = 1.0;
+
+        return $result;
+    }
+
+    /**
      * Get the matrix data
      *
      * @return array

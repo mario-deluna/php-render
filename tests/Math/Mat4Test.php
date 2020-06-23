@@ -88,4 +88,17 @@ class Mat4Test extends \PHPUnit\Framework\TestCase
             125, 150, 175, 200
         ], $m->translate(new Vec3(9, 8, 7))->raw());
     }
+
+    public function testOrtho()
+    {
+        $m = Mat4::ortho(0, 800, 400, 0, 0.1, 100);
+
+        $this->assertEquals(
+        [
+            0.0025, 0.0, 0.0, 0.0,
+            0.0, -0.005, .00, 0.0,
+            0.0, 0.0, -0.02, 0.0,
+            -1.0, 1.0, -1.002, 1.0
+        ], array_map(function($v) {return round($v, 4);}, $m->raw()));
+    }
 }
