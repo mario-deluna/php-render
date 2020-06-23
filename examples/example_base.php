@@ -7,12 +7,16 @@ use PHPR\{
     Buffer\Buffer2D
 };
 
+define('EXAMPLE_RENDER_WIDTH', 800);
+define('EXAMPLE_RENDER_HEIGHT', 600);
+define('EXAMPLE_RENDER_ASPECT_RATIO', EXAMPLE_RENDER_WIDTH / EXAMPLE_RENDER_HEIGHT);
+
 /**
  * Creates example context
  */ 
 function create_exmaple_context() : Context
 {
-    $context = new Context(800, 600);
+    $context = new Context(EXAMPLE_RENDER_WIDTH, EXAMPLE_RENDER_HEIGHT);
     //$context = new Context(1920, 1080);
     $context->attachBuffer(Buffer2D::TYPE_INT, 'color');
     $context->setOutputBuffer('color');

@@ -111,6 +111,17 @@ class Mat4
     }
 
     /**
+     * Multiply the current matrix with the given vector
+     *
+     * @param Vec3                  $vec 
+     * @return Vec4
+     */ 
+    public function multiplyVec3(Vec3 $vec) : Vec4
+    {
+        return Mat4::_multiplyVec4($this, new Vec4($vec->x, $vec->y, $vec->z, 1.0));
+    }
+
+    /**
      * Multiplication with vector 
      *
      * @param Mat4              $left 

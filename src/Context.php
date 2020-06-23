@@ -175,25 +175,32 @@ class Context
      */
     public function drawTriangle(Vertex $v1, Vertex $v2, Vertex $v3)
     {
-        // convert screen space to pixel coords
-        $x1 = (int) ((($v1->position->x + 1) / 2) * $this->width);
-        $x2 = (int) ((($v2->position->x + 1) / 2) * $this->width);
-        $x3 = (int) ((($v3->position->x + 1) / 2) * $this->width);
-        $y1 = (int) ((($v1->position->y + 1) / 2) * $this->height);
-        $y2 = (int) ((($v2->position->y + 1) / 2) * $this->height);
-        $y3 = (int) ((($v3->position->y + 1) / 2) * $this->height);
-
-        $pixels = [];
-
         // prepare vertex out
         $vOut1 = [];
         $vOut2 = [];
         $vOut3 = [];
 
         // generate vertex shader output 
-        $this->shader->vertex($v1, $vOut1);
-        $this->shader->vertex($v2, $vOut2);
-        $this->shader->vertex($v3, $vOut3);
+        $p1 = $this->shader->vertex($v1, $vOut1);
+        $p2 = $this->shader->vertex($v2, $vOut2);
+        $p3 = $this->shader->vertex($v3, $vOut3);
+
+        $p1->x /= $p1->z;
+        $p2->x /= $p2->z;
+        $p3->x /= $p3->z;
+        $p1->y /= $p1->z;
+        $p2->y /= $p2->z;
+        $p3->y /= $p3->z;
+
+        // convert screen space to pixel coords
+        $x1 = (int) ((($p1->x + 1) / 2) * $this->width);
+        $x2 = (int) ((($p2->x + 1) / 2) * $this->width);
+        $x3 = (int) ((($p3->x + 1) / 2) * $this->width);
+        $y1 = (int) ((($p1->y + 1) / 2) * $this->height);
+        $y2 = (int) ((($p2->y + 1) / 2) * $this->height);
+        $y3 = (int) ((($p3->y + 1) / 2) * $this->height);
+
+        $pixels = [];
 
         // rasterize the triangle
         if ($this->drawMode === static::DRAW_MODE_NORMAL)
