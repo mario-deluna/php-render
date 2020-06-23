@@ -101,4 +101,17 @@ class Mat4Test extends \PHPUnit\Framework\TestCase
             -1.0, 1.0, -1.002, 1.0
         ], array_map(function($v) {return round($v, 4);}, $m->raw()));
     }
+
+    public function testPerspective()
+    {
+        $m = Mat4::perspective(0.8, 800 / 600, 0.1, 100);
+
+        $this->assertEquals(
+        [
+            1.7739, 0, 0, 0,
+            0, 2.3652, 0, 0,
+            0, 0, -1.002, -1,
+            0, 0, -0.2002, 0
+        ], array_map(function($v) {return round($v, 4);}, $m->raw()));
+    }
 }

@@ -298,6 +298,43 @@ class Mat4
     }
 
     /**
+     * Create an perspective projection matrix
+     *
+     * @param flaot              $fov 
+     * @param flaot              $ratio 
+     * @param flaot              $near 
+     * @param flaot              $far 
+     * @param Mat4|null          $result
+     *
+     * @return Mat4
+     */
+    public static function perspective(float $fov, float $ratio, float $near, float $far, ?Mat4 &$result = null) : Mat4
+    {
+        if (is_null($result)) $result = new Mat4;
+        $resultValues = &$result->valueRef();
+
+        $tangent = 1.0 / tan($fov / 2);
+        $resultValues[0] = $tangent / $ratio;
+        $resultValues[1] = 0;
+        $resultValues[2] = 0;
+        $resultValues[3] = 0;
+        $resultValues[4] = 0;
+        $resultValues[5] = $tangent;
+        $resultValues[6] = 0;
+        $resultValues[7] = 0;
+        $resultValues[8] = 0;
+        $resultValues[9] = 0;
+        $resultValues[10] = ($far + $near) * (1 / ($near - $far));
+        $resultValues[11] = -1;
+        $resultValues[12] = 0;
+        $resultValues[13] = 0;
+        $resultValues[14] = 2 * $far * $near * (1 / ($near - $far));
+        $resultValues[15] = 0;
+
+        return $result;
+    }
+
+    /**
      * Get the matrix data
      *
      * @return array
