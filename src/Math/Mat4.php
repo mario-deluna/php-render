@@ -208,11 +208,14 @@ class Mat4
      * Multiply the current matrix with the given vector
      *
      * @param Mat4                  $vec 
+     * @param bool                  $createNew
      * @return Mat4
      */ 
-    public function multiply(Mat4 $right) : Mat4
+    public function multiply(Mat4 $right, bool $createNew = false) : Mat4
     {
-        return Mat4::_multiply($this, $right, $this);
+        $result = null;
+        if ($createNew === false) $result = $this; 
+        return Mat4::_multiply($this, $right, $result);
     }
 
     /**
