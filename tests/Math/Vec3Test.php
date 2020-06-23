@@ -84,4 +84,13 @@ class Vec3Test extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals([-1, -4, 3], $a->cross($b)->raw());
     }
+
+    public function testChain()
+    {
+        $a = new Vec3(1, 2, 3);
+
+        $a->multiply(2)->multiply(2)->divide(8);
+
+        $this->assertEquals([0.5, 1, 1.5], $a->raw());
+    }
 }
