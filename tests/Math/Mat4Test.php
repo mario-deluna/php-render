@@ -2,7 +2,7 @@
 
 namespace PHPR\Tests\Math;
 
-use PHPR\Math\Mat4;
+use PHPR\Math\{Mat4, Vec4, Vec3};
 
 class Mat4Test extends \PHPUnit\Framework\TestCase
 {
@@ -36,15 +36,56 @@ class Mat4Test extends \PHPUnit\Framework\TestCase
         ], $m->raw());
     }
 
-    public function testMultiply()
+    private function createTestMatrix() : Mat4
     {
-        $m = new Mat4;
+        return new Mat4([
+            1,  2,  3,  4, 
+            5,  6,  7,  8, 
+            9,  10, 11, 12, 
+            13, 14, 15, 16
+        ]);
+    }
+
+    public function testMultiplyScalar()
+    {
+        $m = $this->createTestMatrix();
         $this->assertEquals(
         [
-            2.0, 0.0, 0.0, 0.0,
-            0.0, 2.0, 0.0, 0.0,
-            0.0, 0.0, 2.0, 0.0,
-            0.0, 0.0, 0.0, 2.0,
+            2,  4,  6,  8, 
+            10, 12, 14, 16, 
+            18, 20, 22, 24, 
+            26, 28, 30, 32
         ], $m->multiplyScalar(2)->raw());
+    }
+
+    public function testMultiplyVec4()
+    {
+        $m = $this->createTestMatrix();
+        $this->assertEquals([190, 220, 250, 280], $m->multiplyVec4(new Vec4(9, 8, 7, 6))->raw());
+    }
+
+    public function testMultiply()
+    {
+        $m1 = $this->createTestMatrix();
+        $m2 = $this->createTestMatrix();
+        $this->assertEquals(
+        [
+            90, 100, 110, 120,
+            202, 228, 254, 280,
+            314, 356, 398, 440,
+            426, 484, 542, 600
+        ], $m1->multiply($m2)->raw());
+    }
+
+    public function testTranslate()
+    {
+        $m = $this->createTestMatrix();
+        $this->assertEquals(
+        [
+            1, 2, 3, 4,
+            5, 6, 7, 8,
+            9, 10, 11, 12,
+            125, 150, 175, 200
+        ], $m->translate(new Vec3(9, 8, 7))->raw());
     }
 }
