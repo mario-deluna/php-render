@@ -114,4 +114,35 @@ class Mat4Test extends \PHPUnit\Framework\TestCase
             0, 0, -0.2002, 0
         ], array_map(function($v) {return round($v, 4);}, $m->raw()));
     }
+
+    public function testMVP()
+    {
+        $projection = Mat4::perspective(0.8, 800 / 600, 0.1, 100);
+        $view = (new Mat4)->translate(new Vec3(1, -5, 1));
+        $model = (new Mat4)->translate(new Vec3(1, 5, 1));
+
+        $vp = $view->multiply($projection, true);
+
+        $this->assertEquals(
+        [
+            1.7739, 0.0, 0.0, 0.0,
+            0.0, 2.3652, 0.0, 0.0,
+            0.0, 0.0, -1.002, -1.0,
+            1.7739, -11.8261, -1.2022, -1.0
+        ], array_map(function($v) {return round($v, 4);}, $vp->raw()));
+
+        $mvp = $model->multiply($view->multiply($projection, true), true);
+
+        $this->assertEquals(
+        [
+            1.7739, 0.0, 0.0, 0.0,
+            0.0, 2.3652, 0.0, 0.0,
+            0.0, 0.0, -1.002, -1.0,
+            3.5478, 0.0, -2.2042, -2.0
+        ], array_map(function($v) {return round($v, 4);}, $mvp->raw()));
+
+        // test final vertex
+        $vertex = $mvp->multiplyVec4(new Vec4(0, 0, 0, 1));
+        $this->assertEquals([3.5478, 0, -2.2042, -2], array_map(function($v) {return round($v, 4);}, $vertex->raw()));
+    }
 }
