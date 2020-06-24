@@ -1,5 +1,7 @@
 <?php
-
+//https://github.com/toji/gl-matrix/blob/master/src/mat4.js
+// https://github.com/adriengivry/Overload/blob/develop/Sources/Overload/OvMaths/src/OvMaths/FMatrix4.cpp
+// https://glm.g-truc.net/0.9.0/api/a00124.html#a40251a4a07049e7fdcbf155c3cc6d32a
 namespace PHPR\Math;
 
 class Mat4 

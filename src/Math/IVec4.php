@@ -33,6 +33,28 @@ class IVec4
     public int $w;
     
     /**
+     * Vector constructor from Vec2
+     *
+     * @param IVec2                $vec
+     * @return IVec4
+     */
+    public static function fromVec2(IVec2 $vec) : IVec4
+    {
+        return new IVec4($vec->x, $vec->y, 0);
+    }
+    
+    /**
+     * Vector constructor from Vec3
+     *
+     * @param IVec3                $vec
+     * @return IVec4
+     */
+    public static function fromVec3(IVec3 $vec) : IVec4
+    {
+        return new IVec4($vec->x, $vec->y, $vec->z, 0, 1);
+    }
+    
+    /**
      * Constructor
      *
      * @param int         $x
