@@ -48,6 +48,11 @@ public function fragment(array &$in, array &$out)
 
 ![Triangle Example](examples/01_triangle/image.tga.png?raw=true)
 
+### Basic Cube
+
+| ![Cube Lines](examples/02_cube_basic/image_lines.tga.png?raw=true) | ![Cube Depth](image_depth.tga.png?raw=true) | ![Cube Color](image.tga.png?raw=true) |
+|---------------------------------------------|---------------------------------------------|---------------------------------------|
+
 ## Credits
 
 - [Mario Döring](https://github.com/mario-deluna)
