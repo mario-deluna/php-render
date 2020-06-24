@@ -27,6 +27,13 @@ class Context
      */
     private Buffer2D $depthBuffer;
 
+    /**
+     * Depth testing?
+     *
+     * @var bool
+     */
+    private bool $depthTest = false;
+
     /** 
      * Current context draw mode 
      */
@@ -83,6 +90,26 @@ class Context
     public function setDrawMode(int $drawMode)
     {
         $this->drawMode = $drawMode;
+    }
+
+    /**
+     * Enabled depth testing in the context
+     *
+     * @return void
+     */
+    public function enableDepthTesting()
+    {
+        $this->depthTest = true;
+    }
+
+    /**
+     * Disable depth testing in the context
+     *
+     * @return void
+     */
+    public function disableDepthTesting()
+    {
+        $this->depthTest = false;
     }
 
     /**
@@ -266,16 +293,19 @@ class Context
             $w2 = $vw[$vp+1];
             $w3 = $vw[$vp+2];
 
-            // get the pixels z value
-            $z = $this->intrpWeights($p1->z, $p2->z, $p3->z, $w1, $w2, $w3);
-            $cz = $this->depthBuffer->getAtPos($x, $y);
+            if ($this->depthTest)
+            {
+                // get the pixels z value
+                $z = $this->intrpWeights($p1->z, $p2->z, $p3->z, $w1, $w2, $w3);
+                $cz = $this->depthBuffer->getAtPos($x, $y);
 
-            // discard fragments behind already drawn ones
-            if ($cz == 0 || $z < $cz) {
-                $this->depthBuffer->setAtPos($x, $y, $z);
-            } else {
-                continue;
-            }
+                // discard fragments behind already drawn ones
+                if ($cz == 0 || $z < $cz) {
+                    $this->depthBuffer->setAtPos($x, $y, $z);
+                } else {
+                    continue;
+                }
+            } 
 
             foreach($vOut1 as $k => $vValue1)
             {

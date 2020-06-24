@@ -30,8 +30,8 @@ class CubeShader extends Shader
      */
     public function fragment(array &$in, array &$out)
     {
-        // $out['color'] = 0xFFFFFF;
         $out['color'] = $in['color']->normalize()->toColorInt();
+        // $out['color'] = 0xFFFFFF;
     }
 }
 
@@ -41,9 +41,9 @@ class CubeShader extends Shader
 $projection = Mat4::perspective(0.7853981633974483, EXAMPLE_RENDER_ASPECT_RATIO, 0.1, 100);
 //$view = (new Mat4)->translate(new Vec3(0, 0, 0));
 $view = new Mat4([1, -0, 0, -0, -0, 1, -0, 0, 0, -0, 1, -0, -0, 0, -0, 1]);
-$model = (new Mat4)->translate(new Vec3(0.4, 0.4, -3));
+$model = (new Mat4)->translate(new Vec3(0.0, 0.0, -3));
 $model->rotateX(0.45);
-$model->rotateY(0.45);
+$model->rotateY(-0.45);
 
 /**
  * Create shader object
@@ -56,6 +56,7 @@ $shader->mvp = $model->multiply($view->multiply($projection, true), true);
  */
 $context = create_exmaple_context();
 $context->bindShader($shader);
+$context->enableDepthTesting();
 //$context->setDrawMode(Context::DRAW_MODE_LINES);
 
 /**
