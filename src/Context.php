@@ -185,13 +185,22 @@ class Context
         $p2 = $this->shader->vertex($v2, $vOut2);
         $p3 = $this->shader->vertex($v3, $vOut3);
 
-        $p1->x /= $p1->z;
-        $p2->x /= $p2->z;
-        $p3->x /= $p3->z;
-        $p1->y /= $p1->z;
-        $p2->y /= $p2->z;
-        $p3->y /= $p3->z;
-
+        if ($p1->z != 0) 
+        {
+            $p1->x /= $p1->z;
+            $p1->y /= $p1->z;
+        }
+        if ($p2->z != 0) 
+        {
+            $p2->x /= $p2->z;
+            $p2->y /= $p2->z;
+        }
+        if ($p3->z != 0) 
+        {
+            $p3->x /= $p3->z;
+            $p3->y /= $p3->z;
+        }
+        
         // convert screen space to pixel coords
         $x1 = (int) ((($p1->x + 1) / 2) * $this->width);
         $x2 = (int) ((($p2->x + 1) / 2) * $this->width);
