@@ -15,4 +15,5 @@ public function fragment(array &$in, array &$out)
 }
 ```
 
-![Triangle Example](image.tga.png?raw=true)
+| ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) |
+|------------------------------------------------------------------|------------------------------------------------------------------|

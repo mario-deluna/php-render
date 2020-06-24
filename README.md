@@ -46,12 +46,13 @@ public function fragment(array &$in, array &$out)
 }
 ```
 
-![Triangle Example](examples/01_triangle/image.tga.png?raw=true)
+| ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) |
+|------------------------------------------------------------------|------------------------------------------------------------------|
 
 ### Basic Cube
 
-| ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) |
-|------------------------------------------------------------------|------------------------------------------------------------------|
+| ![Cube Lines](examples/02_cube_basic/image_lines.tga.png?raw=true) | ![Cube Depth](examples/02_cube_basic/image_depth.tga.png?raw=true) | ![Cube Color](examples/02_cube_basic/image.tga.png?raw=true) |
+|---------------------------------------------|---------------------------------------------|---------------------------------------|
 
 ## Credits
 
