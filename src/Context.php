@@ -143,6 +143,16 @@ class Context
     }
 
     /**
+     * Returns the contexts depth buffer
+     *
+     * @return Buffer2D
+     */
+    public function getDepthBuffer() : Buffer2D
+    {
+        return $this->depthBuffer;
+    }
+
+    /**
      * Set the current active shader
      *
      * @param Shader            $program 
@@ -255,6 +265,17 @@ class Context
             $w1 = $vw[$vp+0];
             $w2 = $vw[$vp+1];
             $w3 = $vw[$vp+2];
+
+            // get the pixels z value
+            $z = $this->intrpWeights($p1->z, $p2->z, $p3->z, $w1, $w2, $w3);
+            $cz = $this->depthBuffer->getAtPos($x, $y);
+
+            // discard fragments behind already drawn ones
+            if ($cz == 0 || $z < $cz) {
+                $this->depthBuffer->setAtPos($x, $y, $z);
+            } else {
+                continue;
+            }
 
             foreach($vOut1 as $k => $vValue1)
             {

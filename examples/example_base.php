@@ -4,7 +4,7 @@ require __DIR__ . '/../bootstrap.php';
 
 use PHPR\{
     Context,
-    Buffer\Buffer2D
+    Buffer\Buffer2D, Buffer\BufferInt
 };
 
 define('EXAMPLE_RENDER_WIDTH', 800);
@@ -31,6 +31,38 @@ function render_example_context(Context $canvas)
 {
     $renderer = new \PHPR\Render\TGARenderer;
     $renderer->render($canvas, EXAMPLE_DIR . '/image.tga');
+}
+
+/**
+ * Render depth buffer of example context
+ */
+function render_example_context_depth(Context $canvas)
+{
+    $depthBO = $canvas->getDepthBuffer()->getBufferObject();
+    $depthData = $depthBO->rawCopy();
+
+    $depthColorBuffer = new BufferInt($depthBO->getSize());
+    $depthColorBufferRef = &$depthColorBuffer->raw();
+
+    $depthData = array_filter($depthData);
+    $max = max($depthData);
+    $min = min($depthData);
+
+    $max = $max - $min;
+
+    if ($max != 0) 
+    {
+        foreach($depthData as $k => $value) 
+        {
+            $value = ($value - $min) / $max;
+            $depthColorBufferRef[$k] = (($value * 255 & 0xff) << 16) + (($value * 255 & 0xff) << 8) + ($value * 255  & 0xff);
+        }
+    }
+
+    $canvas->getOutputBuffer()->replaceBufferObject($depthColorBuffer);
+
+    $renderer = new \PHPR\Render\TGARenderer;
+    $renderer->render($canvas, EXAMPLE_DIR . '/image_depth.tga');
 }
 
 function render_example_context_html(Context $canvas)

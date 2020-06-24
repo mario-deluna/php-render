@@ -1,7 +1,5 @@
 <?php
-//https://github.com/toji/gl-matrix/blob/master/src/mat4.js
-// https://github.com/adriengivry/Overload/blob/develop/Sources/Overload/OvMaths/src/OvMaths/FMatrix4.cpp
-// https://glm.g-truc.net/0.9.0/api/a00124.html#a40251a4a07049e7fdcbf155c3cc6d32a
+
 namespace PHPR\Math;
 
 class Mat4 
@@ -46,6 +44,84 @@ class Mat4
             0.0, 0.0, 1.0, 0.0,
             0.0, 0.0, 0.0, 1.0,
         ];
+    }
+
+    /**
+     * Create an orthographic projection matrix
+     *
+     * @param flaot              $left 
+     * @param flaot              $right 
+     * @param flaot              $bottom 
+     * @param flaot              $top 
+     * @param flaot              $near 
+     * @param flaot              $far 
+     * @param Mat4|null          $result
+     *
+     * @return Mat4
+     */
+    public static function ortho(float $left, float $right, float $bottom, float $top, float $near, float $far, ?Mat4 &$result = null) : Mat4
+    {
+        if (is_null($result)) $result = new Mat4;
+        $resultValues = &$result->valueRef();
+
+        $resultValues[0] = -2 / ($left - $right);
+        $resultValues[1] = 0.0;
+        $resultValues[2] = 0.0;
+        $resultValues[3] = 0.0;
+        $resultValues[4] = 0.0;
+        $resultValues[5] = -2 / ($bottom - $top);
+        $resultValues[6] = 0.0;
+        $resultValues[7] = 0.0;
+        $resultValues[8] = 0.0;
+        $resultValues[9] = 0.0;
+        $resultValues[10] = 2 / ($near - $far);
+        $resultValues[11] = 0.0;
+        $resultValues[12] = -($right + $left) / ($right - $left);
+        //$resultValues[12] = ($left + $right) * ($left - $right);
+        $resultValues[13] = -($top + $bottom) / ($top - $bottom);
+        // $resultValues[13] = ($top + $bottom) * ($bottom - $top);
+        $resultValues[14] = -($far + $near) / ($far - $near);
+        // $resultValues[14] = ($far + $near) * ($near - $far);
+        $resultValues[15] = 1.0;
+
+        return $result;
+    }
+
+    /**
+     * Create an perspective projection matrix
+     *
+     * @param flaot              $fov 
+     * @param flaot              $ratio 
+     * @param flaot              $near 
+     * @param flaot              $far 
+     * @param Mat4|null          $result
+     *
+     * @return Mat4
+     */
+    public static function perspective(float $fov, float $ratio, float $near, float $far, ?Mat4 &$result = null) : Mat4
+    {
+        if (is_null($result)) $result = new Mat4;
+        $resultValues = &$result->valueRef();
+
+        $tangent = 1.0 / tan($fov / 2);
+        $resultValues[0] = $tangent / $ratio;
+        $resultValues[1] = 0;
+        $resultValues[2] = 0;
+        $resultValues[3] = 0;
+        $resultValues[4] = 0;
+        $resultValues[5] = $tangent;
+        $resultValues[6] = 0;
+        $resultValues[7] = 0;
+        $resultValues[8] = 0;
+        $resultValues[9] = 0;
+        $resultValues[10] = ($far + $near) * (1 / ($near - $far));
+        $resultValues[11] = -1;
+        $resultValues[12] = 0;
+        $resultValues[13] = 0;
+        $resultValues[14] = 2 * $far * $near * (1 / ($near - $far));
+        $resultValues[15] = 0;
+
+        return $result;
     }
 
     /**
@@ -273,81 +349,99 @@ class Mat4
     }
 
     /**
-     * Create an orthographic projection matrix
+     * Rotate the matrix by x
      *
-     * @param flaot              $left 
-     * @param flaot              $right 
-     * @param flaot              $bottom 
-     * @param flaot              $top 
-     * @param flaot              $near 
-     * @param flaot              $far 
-     * @param Mat4|null          $result
+     * @param Mat4              $left 
+     * @param float             $radians
+     * @param Mat4|null         $result
      *
      * @return Mat4
      */
-    public static function ortho(float $left, float $right, float $bottom, float $top, float $near, float $far, ?Mat4 &$result = null) : Mat4
+    public static function _rotateX(Mat4 $left, float $radians, ?Mat4 &$result = null) : Mat4
     {
         if (is_null($result)) $result = new Mat4;
+
+        // dont multiply already multiplied values
+        if ($left === $result) {
+            $leftValues = $left->raw();
+        } else {
+            $leftValues = &$left->valueRef();
+        }
+
         $resultValues = &$result->valueRef();
 
-        $resultValues[0] = -2 / ($left - $right);
-        $resultValues[1] = 0.0;
-        $resultValues[2] = 0.0;
-        $resultValues[3] = 0.0;
-        $resultValues[4] = 0.0;
-        $resultValues[5] = -2 / ($bottom - $top);
-        $resultValues[6] = 0.0;
-        $resultValues[7] = 0.0;
-        $resultValues[8] = 0.0;
-        $resultValues[9] = 0.0;
-        $resultValues[10] = 2 / ($near - $far);
-        $resultValues[11] = 0.0;
-        $resultValues[12] = -($right + $left) / ($right - $left);
-        //$resultValues[12] = ($left + $right) * ($left - $right);
-        $resultValues[13] = -($top + $bottom) / ($top - $bottom);
-        // $resultValues[13] = ($top + $bottom) * ($bottom - $top);
-        $resultValues[14] = -($far + $near) / ($far - $near);
-        // $resultValues[14] = ($far + $near) * ($near - $far);
-        $resultValues[15] = 1.0;
+        $rsin = sin($radians);
+        $rcos = cos($radians);
+
+        $resultValues[4] = $leftValues[4] * $rcos + $leftValues[8] * $rsin;
+        $resultValues[5] = $leftValues[5] * $rcos + $leftValues[9] * $rsin;
+        $resultValues[6] = $leftValues[6] * $rcos + $leftValues[10] * $rsin;
+        $resultValues[7] = $leftValues[7] * $rcos + $leftValues[11] * $rsin;
+        $resultValues[8] = $leftValues[8] * $rcos - $leftValues[4] * $rsin;
+        $resultValues[9] = $leftValues[9] * $rcos - $leftValues[5] * $rsin;
+        $resultValues[10] = $leftValues[10] * $rcos - $leftValues[6] * $rsin;
+        $resultValues[11] = $leftValues[11] * $rcos - $leftValues[7] * $rsin;
 
         return $result;
     }
 
     /**
-     * Create an perspective projection matrix
+     * Rotate the current matrix on the x axis
      *
-     * @param flaot              $fov 
-     * @param flaot              $ratio 
-     * @param flaot              $near 
-     * @param flaot              $far 
-     * @param Mat4|null          $result
+     * @param float                  $radians 
+     * @return Mat4
+     */ 
+    public function rotateX(float $radians) : Mat4
+    {
+        return Mat4::_rotateX($this, $radians, $this);
+    }
+
+    /**
+     * Rotate the matrix by y
+     *
+     * @param Mat4              $left 
+     * @param float             $radians
+     * @param Mat4|null         $result
      *
      * @return Mat4
      */
-    public static function perspective(float $fov, float $ratio, float $near, float $far, ?Mat4 &$result = null) : Mat4
+    public static function _rotateY(Mat4 $left, float $radians, ?Mat4 &$result = null) : Mat4
     {
         if (is_null($result)) $result = new Mat4;
+
+        // dont multiply already multiplied values
+        if ($left === $result) {
+            $leftValues = $left->raw();
+        } else {
+            $leftValues = &$left->valueRef();
+        }
+
         $resultValues = &$result->valueRef();
 
-        $tangent = 1.0 / tan($fov / 2);
-        $resultValues[0] = $tangent / $ratio;
-        $resultValues[1] = 0;
-        $resultValues[2] = 0;
-        $resultValues[3] = 0;
-        $resultValues[4] = 0;
-        $resultValues[5] = $tangent;
-        $resultValues[6] = 0;
-        $resultValues[7] = 0;
-        $resultValues[8] = 0;
-        $resultValues[9] = 0;
-        $resultValues[10] = ($far + $near) * (1 / ($near - $far));
-        $resultValues[11] = -1;
-        $resultValues[12] = 0;
-        $resultValues[13] = 0;
-        $resultValues[14] = 2 * $far * $near * (1 / ($near - $far));
-        $resultValues[15] = 0;
+        $rsin = sin($radians);
+        $rcos = cos($radians);
+
+        $resultValues[0] = $leftValues[0] * $rcos - $leftValues[8] * $rsin;
+        $resultValues[1] = $leftValues[1] * $rcos - $leftValues[9] * $rsin;
+        $resultValues[2] = $leftValues[2] * $rcos - $leftValues[10] * $rsin;
+        $resultValues[3] = $leftValues[3] * $rcos - $leftValues[11] * $rsin;
+        $resultValues[8] = $leftValues[0] * $rsin + $leftValues[8] * $rcos;
+        $resultValues[9] = $leftValues[1] * $rsin + $leftValues[9] * $rcos;
+        $resultValues[10] = $leftValues[2] * $rsin + $leftValues[10] * $rcos;
+        $resultValues[11] = $leftValues[3] * $rsin + $leftValues[11] * $rcos;
 
         return $result;
+    }
+
+    /**
+     * Rotate the current matrix on the y axis
+     *
+     * @param float                  $radians 
+     * @return Mat4
+     */ 
+    public function rotateY(float $radians) : Mat4
+    {
+        return Mat4::_rotateY($this, $radians, $this);
     }
 
     /**

@@ -57,6 +57,17 @@ class Buffer2D
     }
 
     /**
+     * Replace the current buffer object
+     *
+     * @param Buffer            $buffer
+     */
+    public function replaceBufferObject(Buffer $buffer)
+    {
+        $this->buffer = $buffer;
+        $this->bufferRef = &$this->buffer->raw();
+    }
+
+    /**
      * Raw buffer reference
      */
     public function &raw() : array
