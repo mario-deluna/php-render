@@ -4,17 +4,18 @@ namespace PHPR\Shader;
 
 use PHPR\Color;
 use PHPR\Mesh\Vertex;
-use PHPR\Math\Vec3;
+use PHPR\Math\Vec4;
 
 class TriangleTestShader extends Shader
 {
     /**
      * Vertex shader like thing
      */
-    public function vertex(Vertex $vertex, array &$out)
+    public function vertex(Vertex $vertex, array &$out) : Vec4
     {
-        $out['position'] = $vertex->position;
         $out['color'] = $vertex->color;
+
+        return Vec4::fromVec3($vertex->position);
     }
 
     /**
