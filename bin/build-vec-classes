@@ -121,6 +121,41 @@ EOD;
     }
 
     /**
+     * Factories
+     * 
+     * ---------------------------------
+     */
+    for($size=2; $size<count($properties); $size++)
+    {
+        $basename = substr($name, 0, -1);
+
+        $fargs = implode(', ', array_map(function($p) use($dataType) {
+            return "\$vec->{$p}";
+        }, array_slice($properties, 0, $size)));
+
+        if ($size === 2) {
+            $fargs .= ', 0';
+        } elseif ($size === 3) {
+            $fargs .= ', 0, 1';
+        }
+
+        $buffer .= <<<EOD
+    
+    /**
+     * Vector constructor from Vec{$size}
+     *
+     * @param {$basename}{$size}                \$vec
+     * @return {$name}
+     */
+    public static function fromVec{$size}({$basename}{$size} \$vec) : {$name}
+    {
+        return new {$name}({$fargs});
+    }\n
+EOD;
+    }
+
+
+    /**
      * Constructor
      * 
      * ---------------------------------

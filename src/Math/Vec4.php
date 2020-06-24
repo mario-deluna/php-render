@@ -33,6 +33,28 @@ class Vec4
     public float $w;
     
     /**
+     * Vector constructor from Vec2
+     *
+     * @param Vec2                $vec
+     * @return Vec4
+     */
+    public static function fromVec2(Vec2 $vec) : Vec4
+    {
+        return new Vec4($vec->x, $vec->y, 0);
+    }
+    
+    /**
+     * Vector constructor from Vec3
+     *
+     * @param Vec3                $vec
+     * @return Vec4
+     */
+    public static function fromVec3(Vec3 $vec) : Vec4
+    {
+        return new Vec4($vec->x, $vec->y, $vec->z, 0, 1);
+    }
+    
+    /**
      * Constructor
      *
      * @param float         $x
