@@ -6,7 +6,7 @@ use PHPR\Context;
 use PHPR\Shader\Shader;
 use PHPR\Mesh\{Vertex, Vertex\VertexPNU};
 use PHPR\Mesh\VertexArray;
-use PHPR\Math\{Vec3, Vec4, Mat4};
+use PHPR\Math\{Vec3, Vec4, Mat4, Angle};
 
 /**
  * Simpel cube shader
@@ -38,7 +38,7 @@ class CubeShader extends Shader
 /**
  * Build a model view projection
  */
-$projection = Mat4::perspective(0.7853981633974483, EXAMPLE_RENDER_ASPECT_RATIO, 0.1, 100);
+$projection = Mat4::perspective(Angle::degreesToRadians(45.0), EXAMPLE_RENDER_ASPECT_RATIO, 0.1, 100);
 //$view = (new Mat4)->translate(new Vec3(0, 0, 0));
 $view = new Mat4([1, -0, 0, -0, -0, 1, -0, 0, 0, -0, 1, -0, -0, 0, -0, 1]);
 $model = (new Mat4)->translate(new Vec3(0.0, 0.0, -3));

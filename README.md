@@ -63,6 +63,8 @@ public function fragment(array &$in, array &$out)
 
 ### Basic Cube
 
+Just a simple cube showcasing 3D geometry with depth testing.
+
 | ![Cube Lines](examples/02_cube_basic/image_lines.tga.png?raw=true) | ![Cube Depth](examples/02_cube_basic/image_depth.tga.png?raw=true) | ![Cube Color](examples/02_cube_basic/image.tga.png?raw=true) |
 |---------------------------------------------|---------------------------------------------|---------------------------------------|
 
