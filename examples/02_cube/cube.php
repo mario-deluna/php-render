@@ -20,7 +20,7 @@ class CubeShader extends Shader
      */
     public function vertex(Vertex $vertex, array &$out) : Vec4
     {
-        $out['color'] = $vertex->position;
+        $out['color'] = $vertex->normal;
 
         return $this->mvp->multiplyVec3($vertex->position);
     }
@@ -39,8 +39,11 @@ class CubeShader extends Shader
  * Build a model view projection
  */
 $projection = Mat4::perspective(0.7853981633974483, EXAMPLE_RENDER_ASPECT_RATIO, 0.1, 100);
-$view = (new Mat4)->translate(new Vec3(0, 0, 0));
-$model = (new Mat4)->translate(new Vec3(0, 0, -3));
+//$view = (new Mat4)->translate(new Vec3(0, 0, 0));
+$view = new Mat4([1, -0, 0, -0, -0, 1, -0, 0, 0, -0, 1, -0, -0, 0, -0, 1]);
+$model = (new Mat4)->translate(new Vec3(0.4, 0.4, -3));
+$model->rotateX(0.45);
+$model->rotateY(0.45);
 
 /**
  * Create shader object
@@ -53,7 +56,7 @@ $shader->mvp = $model->multiply($view->multiply($projection, true), true);
  */
 $context = create_exmaple_context();
 $context->bindShader($shader);
-$context->setDrawMode(Context::DRAW_MODE_LINES);
+//$context->setDrawMode(Context::DRAW_MODE_LINES);
 
 /**
  * Define the cube
@@ -109,3 +112,4 @@ $cube = new VertexArray(VertexPNU::class, [
 $context->drawVertexArray($cube);
 
 render_example_context($context);
+render_example_context_depth($context);
