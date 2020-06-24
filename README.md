@@ -9,6 +9,16 @@ A 3D Software renderer in pure PHP.
  * Depth Buffer Support.
  * Support Multiple Output Buffers per context.
 
+## Table of Contents
+
+  * [Why?](#why)
+     * [So what is this?](#so-what-is-this)
+  * [Examples](#examples)
+     * [Interpolartion Triangle](#interpolartion-triangle)
+     * [Basic Cube](#basic-cube)
+  * [Credits](#credits)
+  * [License](#license)
+
 ## Why?
 
 Because this question is going to pop up a lot, let me address it here first. This project has been a learning experience for me and hopefully also for others interested in computer graphics with a web dev background. I should not have to say it but this has no "production value" whatsoever, there is a mountain of flaws to name a few:
@@ -33,11 +43,16 @@ When I started with programming, I often encountered parts of computer science t
 
 The classic color gradient triangle.
 
+
+| ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) |
+|------------------------------------------------------------------|------------------------------------------------------------------|
+
+
 ```php 
-public function vertex(Vertex $vertex, array &$out)
+public function vertex(Vertex $vertex, array &$out) : Vec4
 {
-    $out['position'] = $vertex->position;
-    $out['color'] = $vertex->color;
+    $out['color'] = $vertex->color; // set the color attribute
+    return Vec4::fromVec3($vertex->position); // return vertex positon
 }
 
 public function fragment(array &$in, array &$out)
@@ -45,9 +60,6 @@ public function fragment(array &$in, array &$out)
     $out['color'] = $in['color']->toColorInt();
 }
 ```
-
-| ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) |
-|------------------------------------------------------------------|------------------------------------------------------------------|
 
 ### Basic Cube
 

@@ -2,11 +2,16 @@
 
 The classic color gradient triangle.
 
+
+| ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) |
+|------------------------------------------------------------------|------------------------------------------------------------------|
+
+
 ```php 
-public function vertex(Vertex $vertex, array &$out)
+public function vertex(Vertex $vertex, array &$out) : Vec4
 {
-    $out['position'] = $vertex->position;
-    $out['color'] = $vertex->color;
+    $out['color'] = $vertex->color; // set the color attribute
+    return Vec4::fromVec3($vertex->position); // return vertex positon
 }
 
 public function fragment(array &$in, array &$out)
@@ -14,6 +19,3 @@ public function fragment(array &$in, array &$out)
     $out['color'] = $in['color']->toColorInt();
 }
 ```
-
-| ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) |
-|------------------------------------------------------------------|------------------------------------------------------------------|
