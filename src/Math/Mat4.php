@@ -103,23 +103,23 @@ class Mat4
         if (is_null($result)) $result = new Mat4;
         $resultValues = &$result->valueRef();
 
-        $tangent = 1.0 / tan($fov / 2);
+        $tangent = 1.0 / tan($fov / 2.0);
         $resultValues[0] = $tangent / $ratio;
-        $resultValues[1] = 0;
-        $resultValues[2] = 0;
-        $resultValues[3] = 0;
-        $resultValues[4] = 0;
+        $resultValues[1] = 0.0;
+        $resultValues[2] = 0.0;
+        $resultValues[3] = 0.0;
+        $resultValues[4] = 0.0;
         $resultValues[5] = $tangent;
-        $resultValues[6] = 0;
-        $resultValues[7] = 0;
-        $resultValues[8] = 0;
-        $resultValues[9] = 0;
-        $resultValues[10] = ($far + $near) * (1 / ($near - $far));
-        $resultValues[11] = -1;
-        $resultValues[12] = 0;
-        $resultValues[13] = 0;
-        $resultValues[14] = 2 * $far * $near * (1 / ($near - $far));
-        $resultValues[15] = 0;
+        $resultValues[6] = 0.0;
+        $resultValues[7] = 0.0;
+        $resultValues[8] = 0.0;
+        $resultValues[9] = 0.0;
+        $resultValues[10] = ($far + $near) * (1.0 / ($near - $far));
+        $resultValues[11] = -1.0;
+        $resultValues[12] = 0.0;
+        $resultValues[13] = 0.0;
+        $resultValues[14] = 2.0 * $far * $near * (1.0 / ($near - $far));
+        $resultValues[15] = 0.0;
 
         return $result;
     }
@@ -166,7 +166,7 @@ class Mat4
      */
     public static function _multiplyVec4(Mat4 $left, Vec4 $vec, ?Vec4 &$result = null) : Vec4
     {
-        if (is_null($result)) $result = new Vec4(0, 0, 0, 0);
+        if (is_null($result)) $result = new Vec4(0.0, 0.0, 0.0, 0.0);
         $leftValues = &$left->valueRef();
 
         $result->x = $leftValues[0] * $vec->x + $leftValues[4] * $vec->y + $leftValues[8] * $vec->z + $leftValues[12] * $vec->w;

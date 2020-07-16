@@ -27,16 +27,20 @@ function create_exmaple_context() : Context
 /**
  * Render a example context
  */
-function render_example_context(Context $canvas)
+function render_example_context(Context $canvas, ?string $file = null)
 {
+    if (is_null($file)) {
+        $file = EXAMPLE_DIR . '/image.tga';
+    }
+
     $renderer = new \PHPR\Render\TGARenderer;
-    $renderer->render($canvas, EXAMPLE_DIR . '/image.tga');
+    $renderer->renderToFile($canvas, $file);
 }
 
 /**
  * Render depth buffer of example context
  */
-function render_example_context_depth(Context $canvas)
+function render_example_context_depth(Context $canvas, ?string $file = null)
 {
     $depthBO = $canvas->getDepthBuffer()->getBufferObject();
     $depthData = $depthBO->rawCopy();
@@ -48,6 +52,12 @@ function render_example_context_depth(Context $canvas)
     $max = max($depthData);
     $min = min($depthData);
 
+    echo "Max Depth $max" . PHP_EOL;
+    echo "Min Depth $min" . PHP_EOL;
+
+    // $min = 0;
+    // $max = 1;
+
     $max = $max - $min;
 
     if ($max != 0) 
@@ -55,14 +65,20 @@ function render_example_context_depth(Context $canvas)
         foreach($depthData as $k => $value) 
         {
             $value = ($value - $min) / $max;
+
             $depthColorBufferRef[$k] = (($value * 255 & 0xff) << 16) + (($value * 255 & 0xff) << 8) + ($value * 255  & 0xff);
+            // $depthColorBufferRef[$k] = $value;
         }
     }
 
     $canvas->getOutputBuffer()->replaceBufferObject($depthColorBuffer);
 
+    if (is_null($file)) {
+        $file = EXAMPLE_DIR . '/image_depth.tga';
+    }
+
     $renderer = new \PHPR\Render\TGARenderer;
-    $renderer->render($canvas, EXAMPLE_DIR . '/image_depth.tga');
+    $renderer->renderToFile($canvas, $file);
 }
 
 function render_example_context_html(Context $canvas)
