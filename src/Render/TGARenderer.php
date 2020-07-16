@@ -11,7 +11,12 @@ use PHPR\Context;
  */
 class TGARenderer
 {
-    public function render(Context $context, string $path)
+    public function renderToFile(Context $context, string $path) 
+    {
+        file_put_contents($path, $this->render($context));
+    }
+
+    public function render(Context $context) : string 
     {
         $buffer = $context->getOutputBuffer();
 
@@ -40,6 +45,6 @@ class TGARenderer
             $body .= chr(($i >> 16) & 0xFF);
         }
 
-        file_put_contents($path, $body);
+        return $body;
     }
 }

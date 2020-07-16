@@ -4,6 +4,7 @@ namespace PHPR;
 
 use PHPR\Buffer\Buffer2D;
 use PHPR\Math\IVec2;
+use PHPR\Math\Vec3;
 
 class Rasterizer
 {
@@ -59,6 +60,16 @@ class Rasterizer
      */
     public function rasterLine(int $x1, int $y1, int $x2, int $y2, ?array &$pixels, bool $tailless = false)
     {
+        // swap so all lines are drawn from the same direction
+        // if ($x1 > $x2 || $y1 > $y2) {
+        //     $tmp = $x1;
+        //     $x1 = $x2;
+        //     $x2 = $tmp;
+        //     $tmp = $y1;
+        //     $y1 = $y2;
+        //     $y2 = $tmp;
+        // }
+
         // Bresenham Algorithm
         // --
 
@@ -74,11 +85,17 @@ class Rasterizer
         {
             if ($tailless && ($x1 === $x2 && $y1 === $y2)) break;
 
-            if ($x1 >= $this->width) break;
-            if ($y1 >= $this->height) break;
+            // if ($x1 >= $this->width) break;
+            // if ($y1 >= $this->height) break;
+            
+            if ($y1 > 0)
+            {   
+                $pixels[] = min(max($x1, 0), $this->width - 1);
+                $pixels[] = min(max($y1, 0), $this->height - 1);
+            }
 
-            $pixels[] = $x1;
-            $pixels[] = $y1;
+            // $pixels[] = $x1;
+            // $pixels[] = $y1;
 
             $e2 = $e * 2;
 
@@ -236,29 +253,78 @@ class Rasterizer
         // * 
         // C (v3)
 
-        $vd = ($y3 - $y1);
-        $ud = ($x3 - $x1);
-        $vb = ($y2 - $y1);
-        $ub = ($x2 - $x1);
+        $v1x = $x2 - $x1;
+        $v1y = $y2 - $y1;
 
-        $v1v = $x1 * $vd;
-        $d = $vb * $ud - $ub * $vd;
+        $v2x = $x3 - $x1;
+        $v2y = $y3 - $y1;
 
-        if ($d === 0) $d = 1;
-        if ($vd === 0) $vd = 1;
+        $dv11 = $v1x * $v1x + $v1y * $v1y;
+        $dv12 = $v1x * $v2x + $v1y * $v2y;
+        $dv22 = $v2x * $v2x + $v2y * $v2y;
+
+        $factor = $dv11 * $dv22 - $dv12 * $dv12;
 
         for($i = 0; $i < count($pixels); $i+=2) 
         {
+            if ($factor == 0) {
+                $contribution[] = -1.0;
+                $contribution[] = -1.0;
+                $contribution[] = -1.0;
+                continue;
+            }
+
             $x = $pixels[$i+0];
             $y = $pixels[$i+1];
 
-            $u = ($v1v + (($y - $y1) * $ud) - ($x * $vd)) / $d;
-            $v = ($y - $y1 - $u * $vb) / $vd;
+            $v3x = $x - $x1;
+            $v3y = $y - $y1;
 
-            $contribution[] = max(1 - $u - $v, 0);
-            $contribution[] = max($u, 0);
-            $contribution[] = max($v, 0);
+            $dv31 = $v3x * $v1x + $v3y * $v1y;
+            $dv32 = $v3x * $v2x + $v3y * $v2y;
+
+            $v = ($dv22 * $dv31 - $dv12 * $dv32) / $factor;
+            $w = ($dv11 * $dv32 - $dv12 * $dv31) / $factor;
+            $u = 1.0 - $v - $w;
+
+            $contribution[] = $u;
+            $contribution[] = $v;
+            $contribution[] = $w;
         }
+
+        // $vd = ($y3 - $y1);
+        // $ud = ($x3 - $x1);
+        // $vb = ($y2 - $y1);
+        // $ub = ($x2 - $x1);
+
+        // $v1v = $x1 * $vd;
+        // $d = $vb * $ud - $ub * $vd;
+
+        // if ($d === 0) $d = 1;
+        // if ($vd === 0) $vd = 1;
+
+        // for($i = 0; $i < count($pixels); $i+=2) 
+        // {
+        //     $x = $pixels[$i+0];
+        //     $y = $pixels[$i+1];
+
+        //     $u = ($v1v + (($y - $y1) * $ud) - ($x * $vd)) / $d;
+        //     $v = ($y - $y1 - $u * $vb) / $vd;
+
+        //     $uv = 1 - $u - $v;
+
+        //     $s = $uv + $u + $v;
+
+        //     // $contribution[] = min(max(1 - $u - $v, 0.0), 1.0);
+        //     // $contribution[] = min(max($u, 0.0), 1.0);
+        //     // $contribution[] = min(max($v, 0.0), 1.0);
+        //     $contribution[] = ((1 - $u - $v));
+        //     $contribution[] = (($u));
+        //     $contribution[] = (($v));
+        //     // $contribution[] = max(min($uv, 1.0), 0.0);
+        //     // $contribution[] = max(min($u, 1.0), 0.0);
+        //     // $contribution[] = max(min($v, 1.0), 0.0);
+        // }
 
         return $contribution;
     }

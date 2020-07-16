@@ -52,6 +52,11 @@ class Context
     private ?string $outputBufferKey = null;
 
     /**
+     * Callback to be executed after each triangle
+     */
+    public $triangleDrawnCallback = null;
+
+    /**
      * Context Resolution
      */
     private int $width;
@@ -204,13 +209,53 @@ class Context
     }
 
     /**
+     * Draw a single line
+     *
+     * @param Vertex                $v1
+     * @param Vertex                $v2
+     */
+    public function drawLine(Vertex $v1, Vertex $v2)
+    {
+        // prepare vertex out
+        $vOut1 = [];
+        $vOut2 = [];
+
+        // generate vertex shader output 
+        $p1 = $this->shader->vertex($v1, $vOut1);
+        $p2 = $this->shader->vertex($v2, $vOut2);
+
+        $p1->x /= $p1->w;
+        $p1->y /= $p1->w;
+        $p1->z /= $p1->w;
+        $p2->x /= $p2->w;
+        $p2->y /= $p2->w;
+        $p2->z /= $p2->w;
+
+        // convert screen space to pixel coords
+        $x1 = (int) round((($p1->x + 1) / 2) * $this->width);
+        $x2 = (int) round((($p2->x + 1) / 2) * $this->width);
+        $y1 = (int) round((($p1->y + 1) / 2) * $this->height);
+        $y2 = (int) round((($p2->y + 1) / 2) * $this->height);
+
+        $pixels = [];
+
+        // rasterize
+        $this->rasterizer->rasterLine(
+            $x1, $y1, 
+            $x2, $y2, 
+            $pixels
+        );
+    }
+
+    /**
      * Draw a single triangle on the current buffer
      *
      * @param Vertex                $v1
      * @param Vertex                $v2
      * @param Vertex                $v3
+     * @param int                   $index
      */
-    public function drawTriangle(Vertex $v1, Vertex $v2, Vertex $v3)
+    public function drawTriangle(Vertex $v1, Vertex $v2, Vertex $v3, int $index = 0)
     {
         // prepare vertex out
         $vOut1 = [];
@@ -222,29 +267,56 @@ class Context
         $p2 = $this->shader->vertex($v2, $vOut2);
         $p3 = $this->shader->vertex($v3, $vOut3);
 
-        if ($p1->z != 0) 
+        // $p1->normalize();
+        // $p2->normalize();
+        // $p3->normalize();
+
+        // $p1->x /= $p1->w;
+        // $p1->y /= $p1->w;
+        // $p1->z /= $p1->w;
+        // $p2->x /= $p2->w;
+        // $p2->y /= $p2->w;
+        // $p2->z /= $p2->w;
+        // $p3->x /= $p3->w;
+        // $p3->y /= $p3->w;
+        // $p3->z /= $p3->w;
+
+
+        // _d($p1->z, $p2->z, $p3->z);
+
+        if ($p1->w != 0) 
         {
-            $p1->x /= $p1->z;
-            $p1->y /= $p1->z;
+            $p1->x /= $p1->w;
+            $p1->y /= $p1->w;
+            $p1->z /= $p1->w;
         }
-        if ($p2->z != 0) 
+        if ($p2->w != 0) 
         {
-            $p2->x /= $p2->z;
-            $p2->y /= $p2->z;
+            $p2->x /= $p2->w;
+            $p2->y /= $p2->w;
+            $p2->z /= $p2->w;
         }
-        if ($p3->z != 0) 
+        if ($p3->w != 0) 
         {
-            $p3->x /= $p3->z;
-            $p3->y /= $p3->z;
+            $p3->x /= $p3->w;
+            $p3->y /= $p3->w;
+            $p3->z /= $p3->w;
         }
+
+        // backface culling with shoelace algo
+        $area = ($p1->x * $p2->y) + ($p2->x * $p3->y) + ($p3->x * $p1->y) - ($p2->x * $p1->y) - ($p3->x * $p2->y) - ($p1->x * $p3->y);
+        if ($area < 0) return;
+
+        // $area = 1 / $area;
+        
         
         // convert screen space to pixel coords
-        $x1 = (int) ((($p1->x + 1) / 2) * $this->width);
-        $x2 = (int) ((($p2->x + 1) / 2) * $this->width);
-        $x3 = (int) ((($p3->x + 1) / 2) * $this->width);
-        $y1 = (int) ((($p1->y + 1) / 2) * $this->height);
-        $y2 = (int) ((($p2->y + 1) / 2) * $this->height);
-        $y3 = (int) ((($p3->y + 1) / 2) * $this->height);
+        $x1 = (int) round((($p1->x + 1) / 2) * $this->width);
+        $x2 = (int) round((($p2->x + 1) / 2) * $this->width);
+        $x3 = (int) round((($p3->x + 1) / 2) * $this->width);
+        $y1 = (int) round((($p1->y + 1) / 2) * $this->height);
+        $y2 = (int) round((($p2->y + 1) / 2) * $this->height);
+        $y3 = (int) round((($p3->y + 1) / 2) * $this->height);
 
         $pixels = [];
 
@@ -283,6 +355,8 @@ class Context
         $fragOut = [];
         $fragIn = [];
 
+        // _d('T---------------');
+
         for($i = 0; $i < count($pixels); $i+=2) 
         {
             $x = $pixels[$i+0];
@@ -293,16 +367,37 @@ class Context
             $w2 = $vw[$vp+1];
             $w3 = $vw[$vp+2];
 
+            $ws = $w1 + $w2 + $w3;
+
+            // _d($w1 . ':' . $w2 . ':' . $w3);
+
+            // if (($w1 | $w2 | $w3) <= 0) continue;
+            if ($ws > (1.0 + PHP_FLOAT_EPSILON)) continue;
+            if (($w1 + PHP_FLOAT_EPSILON) < 0 || ($w2 + PHP_FLOAT_EPSILON) < 0 || ($w3 + PHP_FLOAT_EPSILON) < 0) continue;
+
             if ($this->depthTest)
             {
                 // get the pixels z value
-                $z = $this->intrpWeights($p1->z, $p2->z, $p3->z, $w1, $w2, $w3);
+                $z = ($p1->z * $w1) + ($p2->z * $w2) + ($p3->z * $w3);
+
+
+                // $z = $this->intrpWeights($p1->z, $p2->z, $p3->z, $w1, $w2, $w3);
+                // $z = $this->intrpWeights($p1->z, $p2->z, $p3->z, $w1, $w2, $w3);
+                // $z = round($z, 4, PHP_ROUND_HALF_DOWN);
+                //$z += ($p1->z + $p2->z + $p3->z) / 3;
                 $cz = $this->depthBuffer->getAtPos($x, $y);
 
+                // if ($w1 <= 0.0 || $w2 <= 0.0 || $w3 <= 0.0) continue;
+                // echo 0;
+                // _d($z, $p1->z, $p2->z, $p3->z, $w1, $w2, $w3);
+
+                if ($z < 0) continue;
+
                 // discard fragments behind already drawn ones
-                if ($cz == 0 || $z < $cz) {
+                if (abs($cz) < PHP_FLOAT_EPSILON || ($z < ($cz - PHP_FLOAT_EPSILON * 3))) {
                     $this->depthBuffer->setAtPos($x, $y, $z);
                 } else {
+                //var_dump($p1->z, $p2->z, $p3->z, $w1, $w2, $w3, $z, $cz);// die;
                     continue;
                 }
             } 
@@ -331,8 +426,14 @@ class Context
             // assign outputs to buffers
             foreach($fragOut as $k => $value)
             {
+                // _d($value. ' --- '.$z);
                 $this->buffers[$k]->setAtPos($x, $y, $value);
             }
+        }
+
+        // exec callback
+        if ($this->triangleDrawnCallback) {
+            $call = $this->triangleDrawnCallback; $call();
         }
     }
 
@@ -345,8 +446,20 @@ class Context
     {
         $triangles = array_chunk($va->getVertices(), 3);
 
-        foreach($triangles as &$triangle) {
-            $this->drawTriangle($triangle[0], $triangle[1], $triangle[2]);
+        foreach($triangles as $i => &$triangle) {
+            $this->drawTriangle($triangle[0], $triangle[1], $triangle[2], $i);
+        }
+    }
+
+    /**
+     * Clear the buffers of the current context
+     */
+    public function clear()
+    {
+        $this->depthBuffer->getBufferObject()->clear();
+
+        foreach($this->buffers as $buffer) {
+            $buffer->getBufferObject()->clear();
         }
     }
 }
