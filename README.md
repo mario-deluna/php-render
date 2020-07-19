@@ -79,6 +79,13 @@ Showcasing a simple example how to use the ffmpeg stream to create videos with p
 | ![Cube Lines](examples/03_cube_video/video.gif?raw=true) |
 |-----------------------------------|
 
+### Basic Model Loading 
+
+This example shows how to load a model from an `obj` file.
+
+| ![Model Lines](examples/04_simple_model/image_lines.tga.png?raw=true) | ![Model Depth](examples/04_simple_model/image_depth.tga.png?raw=true) | ![Model Color](examples/04_simple_model/image.tga.png?raw=true) |
+|---------------------------------------------|---------------------------------------------|---------------------------------------|
+
 ## Credits
 
 - [Mario Döring](https://github.com/mario-deluna)
