@@ -81,6 +81,22 @@ function render_example_context_depth(Context $canvas, ?string $file = null)
     $renderer->renderToFile($canvas, $file);
 }
 
+/**
+ * Render a video example
+ */
+function video_example_context(Context $canvas, ?string $file = null) : \PHPR\Render\FFMPEGStream
+{
+    if (is_null($file)) {
+        $file = EXAMPLE_DIR . '/video.mp4';
+    }
+
+    $stream = new \PHPR\Render\FFMPEGStream($canvas);
+    $stream->start($file);
+
+    return $stream;
+}
+
+
 function render_example_context_html(Context $canvas)
 {
     $renderer = new \PHPR\Render\HTMLRender;

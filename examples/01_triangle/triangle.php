@@ -8,6 +8,7 @@ use PHPR\Math\Vec3;
 
 $context = create_exmaple_context();
 $context->bindShader(new TriangleTestShader);
+// $context->setDrawMode(\PHPR\Context::DRAW_MODE_LINES);
 
 /**
  * Vertex subclass with color attribute
@@ -34,5 +35,6 @@ $context->drawTriangle(
     ExampleVertex::c( 0.8, -0.8, 0.0, 0.0, 1.0, 0.0),
     ExampleVertex::c( 0.0,  0.8, 0.0, 0.0, 0.0, 1.0),
 );
+
 
 render_example_context($context);

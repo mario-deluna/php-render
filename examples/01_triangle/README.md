@@ -6,6 +6,7 @@ The classic color gradient triangle.
 | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) |
 |------------------------------------------------------------------|------------------------------------------------------------------|
 
+This example exists to showcase the interpolation of the barycentric coordinates inside of a drawn triangle.
 
 ```php 
 public function vertex(Vertex $vertex, array &$out) : Vec4

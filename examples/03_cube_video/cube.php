@@ -8,6 +8,8 @@ use PHPR\Mesh\{Vertex, Vertex\VertexPNU};
 use PHPR\Mesh\VertexArray;
 use PHPR\Math\{Vec3, Vec4, Mat4, Angle};
 
+use PHPR\Render\FFMPEGStream;
+
 /**
  * Simpel cube shader
  */
@@ -21,7 +23,7 @@ class CubeShader extends Shader
     public function vertex(Vertex $vertex, array &$out) : Vec4
     {
         $out['color'] = $vertex->normal;
-        
+
         return $this->mvp->multiplyVec3($vertex->position);
     }
 
@@ -29,10 +31,15 @@ class CubeShader extends Shader
      * Fragment shader like thing
      */
     public function fragment(array &$in, array &$out)
-    {
-        $out['color'] = $in['color']->normalize()->toColorInt();
+    {   
+        $v = $in['color']->normalize();
+        $v->add(new Vec3(1.0, 1.0, 1.0))->multiply(0.5);
+
+        $out['color'] = $v->toColorInt();
+        // $out['color'] = 0xFFFFFF;
     }
 }
+
 
 /**
  * Create shader object
@@ -109,12 +116,26 @@ $cube = new VertexArray(VertexPNU::class, [
     -0.5,  0.5, -0.5,  0.0,  1.0,  0.0, 0.0, 1.0,
 ]);
 
-
 /**
- * draw the cube
+ * Start a new video stream
  */
-$context->drawVertexArray($cube);
+$stream = video_example_context($context);
 
+for ($i=0; $i<360; $i++)
+{
+    // clear 
+    $context->clear();
 
-render_example_context($context);
-render_example_context_depth($context);
+    // rotate 
+    $model->rotateX(-0.01);
+    $model->rotateY(-0.01);
+    $shader->mvp = $model->multiply($view->multiply($projection, true), true);
+
+    // draw the cube
+    $context->drawVertexArray($cube);
+
+    // render to video
+    $stream->render();
+}
+
+$stream->stop();

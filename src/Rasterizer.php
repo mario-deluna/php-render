@@ -87,6 +87,12 @@ class Rasterizer
 
             // if ($x1 >= $this->width) break;
             // if ($y1 >= $this->height) break;
+
+            // if (($x1 >= 0 && $x1 < $this->width) && ($y1 >= 0 && $y1 < $this->height)) 
+            // {
+            //     $pixels[] = $x1;
+            //     $pixels[] = $y1;
+            // }
             
             if ($y1 > 0)
             {   

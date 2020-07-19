@@ -2,12 +2,15 @@
 
 A 3D Software renderer in pure PHP.
 
- * No "pure php" cheating with FFI.
  * Just download/clone and the renderer should just work.
  * Has Shader System in PHP.
  * Allows Custom vertex attributes with interpolation.
- * Depth Buffer Support.
- * Support Multiple Output Buffers per context.
+ * Supports a Depth Buffer.
+ * Supports Multiple Output Buffers per context.
+ * CG Math Library.
+ * ObJ File Parser.
+ * Render to a mp4 video (requires ffmpeg)
+ * No "pure php" cheating with FFI.
 
 ## Table of Contents
 
@@ -47,6 +50,7 @@ The classic color gradient triangle.
 | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) |
 |------------------------------------------------------------------|------------------------------------------------------------------|
 
+This example exists to showcase the interpolation of the barycentric coordinates inside of a drawn triangle.
 
 ```php 
 public function vertex(Vertex $vertex, array &$out) : Vec4
@@ -67,6 +71,13 @@ Just a simple cube showcasing 3D geometry with depth testing.
 
 | ![Cube Lines](examples/02_cube_basic/image_lines.tga.png?raw=true) | ![Cube Depth](examples/02_cube_basic/image_depth.tga.png?raw=true) | ![Cube Color](examples/02_cube_basic/image.tga.png?raw=true) |
 |---------------------------------------------|---------------------------------------------|---------------------------------------|
+
+### Cube Video
+
+Showcasing a simple example how to use the ffmpeg stream to create videos with php-render.
+
+| ![Cube Lines](video.gif?raw=true) |
+|-----------------------------------|
 
 ## Credits
 
