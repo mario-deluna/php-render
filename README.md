@@ -76,7 +76,7 @@ Just a simple cube showcasing 3D geometry with depth testing.
 
 Showcasing a simple example how to use the ffmpeg stream to create videos with php-render.
 
-| ![Cube Lines](video.gif?raw=true) |
+| ![Cube Lines](examples/03_cube_video/video.gif?raw=true) |
 |-----------------------------------|
 
 ## Credits
