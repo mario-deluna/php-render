@@ -8,7 +8,7 @@ use PHPR\Mesh\Vertex;
 use PHPR\Mesh\VertexArray;
 use PHPR\Buffer\Buffer2D;
 
-use PHPR\Math\Vec3;
+use PHPR\Math\{Vec4, Vec3, Vec2};
 
 class Context
 {
@@ -33,6 +33,13 @@ class Context
      * @var bool
      */
     private bool $depthTest = false;
+
+    /**
+     * Backface culling?
+     *
+     * @var bool
+     */
+    private bool $backfaceCulling = true;
 
     /** 
      * Current context draw mode 
@@ -115,6 +122,26 @@ class Context
     public function disableDepthTesting()
     {
         $this->depthTest = false;
+    }
+
+    /**
+     * Enabled backface culling in the context
+     *
+     * @return void
+     */
+    public function enableBackfaceCulling()
+    {
+        $this->backfaceCulling = true;
+    }
+
+    /**
+     * Disable backface culling in the context
+     *
+     * @return void
+     */
+    public function disableBackfaceCulling()
+    {
+        $this->backfaceCulling = false;
     }
 
     /**
@@ -304,8 +331,12 @@ class Context
         }
 
         // backface culling with shoelace algo
-        $area = ($p1->x * $p2->y) + ($p2->x * $p3->y) + ($p3->x * $p1->y) - ($p2->x * $p1->y) - ($p3->x * $p2->y) - ($p1->x * $p3->y);
-        if ($area < 0) return;
+        if ($this->backfaceCulling)
+        {
+            $area = ($p1->x * $p2->y) + ($p2->x * $p3->y) + ($p3->x * $p1->y) - ($p2->x * $p1->y) - ($p3->x * $p2->y) - ($p1->x * $p3->y);
+            if ($area < 0) return;
+        }
+        
 
         // $area = 1 / $area;
         
@@ -412,6 +443,12 @@ class Context
                         $this->intrpWeights($vValue1->x, $vValue2->x, $vValue3->x, $w1, $w2, $w3),
                         $this->intrpWeights($vValue1->y, $vValue2->y, $vValue3->y, $w1, $w2, $w3),
                         $this->intrpWeights($vValue1->z, $vValue2->z, $vValue3->z, $w1, $w2, $w3),
+                    );
+                }
+                elseif ($vValue1 instanceof Vec2) {
+                    $fragIn[$k] = new Vec2(
+                        $this->intrpWeights($vValue1->x, $vValue2->x, $vValue3->x, $w1, $w2, $w3),
+                        $this->intrpWeights($vValue1->y, $vValue2->y, $vValue3->y, $w1, $w2, $w3),
                     );
                 }
                 else 
