@@ -8,7 +8,7 @@ The classic color gradient triangle.
 $ php examples/01_triangle/triangle.php
 ```
 
-| ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) |
+| ![Triangle Example](image.tga.png?raw=true) | ![Triangle Example](image.tga.png?raw=true) |
 |------------------------------------------------------------------|------------------------------------------------------------------|
 
 This example exists to showcase the interpolation of the barycentric coordinates inside of a drawn triangle.
