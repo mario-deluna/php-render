@@ -2,7 +2,7 @@
 
 The classic color gradient triangle.
 
-[Goto Example Source](examples/01_triangle/)
+[Example Source](examples/01_triangle/)
 
 ```
 $ php examples/01_triangle/triangle.php
