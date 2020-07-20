@@ -46,6 +46,11 @@ When I started with programming, I often encountered parts of computer science t
 
 The classic color gradient triangle.
 
+[Goto Example Source](examples/01_triangle/)
+
+```
+$ php examples/01_triangle/triangle.php
+```
 
 | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) | ![Triangle Example](examples/01_triangle/image.tga.png?raw=true) |
 |------------------------------------------------------------------|------------------------------------------------------------------|
