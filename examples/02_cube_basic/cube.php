@@ -44,7 +44,7 @@ $shader = new CubeShader;
  */
 $projection = Mat4::perspective(Angle::degreesToRadians(45.0), EXAMPLE_RENDER_ASPECT_RATIO, 0.1, 100);
 
-$view = new Mat4([1, -0, 0, -0, -0, 1, -0, 0, 0, -0, 1, -0, -0, 0, -0, 1]);
+$view = (new Mat4())->inverse();
 
 $model = (new Mat4)->translate(new Vec3(0.0, 0.0, -3));
 $model->rotateX(0.45);

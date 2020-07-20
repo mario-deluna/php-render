@@ -40,10 +40,10 @@ class CubeShader extends Shader
  * Build a model view projection
  */
 $projection = Mat4::perspective(Angle::degreesToRadians(-45.0), EXAMPLE_RENDER_ASPECT_RATIO, 0.5, 10);
-//$view = (new Mat4)->translate(new Vec3(0, 0, 0));
-$view = new Mat4([1.0, -0.0, 0.0, -0.0, -0.0, 1.0, -0.0, 0.0, 0.0, -0.0, 1.0, -0.0, -0.0, 0.0, -0.0, 1.0]);
-$model = (new Mat4)->translate(new Vec3(0.1, -0.3, -2.5));
 
+$view = (new Mat4())->inverse();
+
+$model = (new Mat4)->translate(new Vec3(0.1, -0.3, -2.5));
 $model->rotateX(0.4);
 $model->rotateY(-0.6);
 //$model->rotateY(-0.05);
