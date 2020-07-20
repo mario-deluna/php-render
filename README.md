@@ -86,6 +86,13 @@ This example shows how to load a model from an `obj` file.
 | ![Model Lines](examples/04_simple_model/image_lines.tga.png?raw=true) | ![Model Depth](examples/04_simple_model/image_depth.tga.png?raw=true) | ![Model Color](examples/04_simple_model/image.tga.png?raw=true) |
 |---------------------------------------------|---------------------------------------------|---------------------------------------|
 
+### Model With Texture Sampling
+
+Showcases basic texture sampling of a loaded model.
+
+| ![Model Lines](examples/05_texture_sampling/image_lines.tga.png?raw=true) | ![Model Depth](examples/05_texture_sampling/image_depth.tga.png?raw=true) | ![Model Color](image.tga.jpg?raw=true) |
+|---------------------------------------------|---------------------------------------------|---------------------------------------|
+
 ## Credits
 
 - [Mario Döring](https://github.com/mario-deluna)
