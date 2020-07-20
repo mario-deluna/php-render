@@ -15,10 +15,13 @@ A 3D Software renderer in pure PHP.
 ## Table of Contents
 
   * [Why?](#why)
-     * [So what is this?](#so-what-is-this)
+    + [So what is this?](#so-what-is-this)
   * [Examples](#examples)
-     * [Interpolartion Triangle](#interpolartion-triangle)
-     * [Basic Cube](#basic-cube)
+    + [Interpolartion Triangle](#interpolartion-triangle)
+    + [Basic Cube](#basic-cube)
+    + [Cube Video](#cube-video)
+    + [Basic Model Loading](#basic-model-loading)
+    + [Model With Texture Sampling](#model-with-texture-sampling)
   * [Credits](#credits)
   * [License](#license)
 
