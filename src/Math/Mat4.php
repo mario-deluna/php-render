@@ -445,6 +445,85 @@ class Mat4
     }
 
     /**
+     * Invert a matrix
+     *
+     * @param Mat4              $left 
+     * @param float             $radians
+     * @param Mat4|null         $result
+     *
+     * @return Mat4
+     */
+    public static function _inverse(Mat4 $left, ?Mat4 &$result = null) : Mat4
+    {
+        if (is_null($result)) $result = new Mat4;
+
+        // dont update already updated values
+        if ($left === $result) {
+            $leftValues = $left->raw();
+        } else {
+            $leftValues = &$left->valueRef();
+        }
+
+        $resultValues = &$result->valueRef();
+
+
+        $cof1 = $leftValues[0] * $leftValues[5] - $leftValues[1] * $leftValues[4];
+        $cof2 = $leftValues[0] * $leftValues[6] - $leftValues[2] * $leftValues[4];
+        $cof3 = $leftValues[0] * $leftValues[7] - $leftValues[3] * $leftValues[4];
+        $cof4 = $leftValues[1] * $leftValues[6] - $leftValues[2] * $leftValues[5];
+        $cof5 = $leftValues[1] * $leftValues[7] - $leftValues[3] * $leftValues[5];
+        $cof6 = $leftValues[2] * $leftValues[7] - $leftValues[3] * $leftValues[6];
+        $cof7 = $leftValues[8] * $leftValues[13] - $leftValues[9] * $leftValues[12];
+        $cof8 = $leftValues[8] * $leftValues[14] - $leftValues[10] * $leftValues[12];
+        $cof9 = $leftValues[8] * $leftValues[15] - $leftValues[11] * $leftValues[12];
+        $cof10 = $leftValues[9] * $leftValues[14] - $leftValues[10] * $leftValues[13];
+        $cof11 = $leftValues[9] * $leftValues[15] - $leftValues[11] * $leftValues[13];
+        $cof12 = $leftValues[10] * $leftValues[15] - $leftValues[11] * $leftValues[14];
+
+        $determinant = 
+          $cof1 * $cof12 - $cof2 * $cof11 + 
+          $cof3 * $cof10 + $cof4 * $cof9 - 
+          $cof5 * $cof8 + $cof6 * $cof7;
+          
+        if ($determinant == 0) {
+            throw new \Exception("Division by 0");
+        }
+
+        $determinant = 1.0 / $determinant;
+
+        $resultValues[0] = ($leftValues[5] * $cof12 - $leftValues[6] * $cof11 + $leftValues[7] * $cof10) * $determinant;
+        $resultValues[1] = ($leftValues[2] * $cof11 - $leftValues[1] * $cof12 - $leftValues[3] * $cof10) * $determinant;
+        $resultValues[2] = ($leftValues[13] * $cof6 - $leftValues[14] * $cof5 + $leftValues[15] * $cof4) * $determinant;
+        $resultValues[3] = ($leftValues[10] * $cof5 - $leftValues[9] * $cof6 - $leftValues[11] * $cof4) * $determinant;
+        $resultValues[4] = ($leftValues[6] * $cof9 - $leftValues[4] * $cof12 - $leftValues[7] * $cof8) * $determinant;
+        $resultValues[5] = ($leftValues[0] * $cof12 - $leftValues[2] * $cof9 + $leftValues[3] * $cof8) * $determinant;
+        $resultValues[6] = ($leftValues[14] * $cof3 - $leftValues[12] * $cof6 - $leftValues[15] * $cof2) * $determinant;
+        $resultValues[7] = ($leftValues[8] * $cof6 - $leftValues[10] * $cof3 + $leftValues[11] * $cof2) * $determinant;
+        $resultValues[8] = ($leftValues[4] * $cof11 - $leftValues[5] * $cof9 + $leftValues[7] * $cof7) * $determinant;
+        $resultValues[9] = ($leftValues[1] * $cof9 - $leftValues[0] * $cof11 - $leftValues[3] * $cof7) * $determinant;
+        $resultValues[10] = ($leftValues[12] * $cof5 - $leftValues[13] * $cof3 + $leftValues[15] * $cof1) * $determinant;
+        $resultValues[11] = ($leftValues[9] * $cof3 - $leftValues[8] * $cof5 - $leftValues[11] * $cof1) * $determinant;
+        $resultValues[12] = ($leftValues[5] * $cof8 - $leftValues[4] * $cof10 - $leftValues[6] * $cof7) * $determinant;
+        $resultValues[13] = ($leftValues[0] * $cof10 - $leftValues[1] * $cof8 + $leftValues[2] * $cof7) * $determinant;
+        $resultValues[14] = ($leftValues[13] * $cof2 - $leftValues[12] * $cof4 - $leftValues[14] * $cof1) * $determinant;
+        $resultValues[15] = ($leftValues[8] * $cof4 - $leftValues[9] * $cof2 + $leftValues[10] * $cof1) * $determinant;
+                
+
+        return $result;
+    }
+
+    /**
+     * Inverse the current matrix
+     *
+     * @param Vec3                  $vec 
+     * @return Mat4
+     */ 
+    public function inverse() : Mat4
+    {
+        return Mat4::_inverse($this, $this);
+    }
+
+    /**
      * Get the matrix data
      *
      * @return array

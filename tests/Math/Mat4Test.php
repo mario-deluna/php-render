@@ -145,4 +145,38 @@ class Mat4Test extends \PHPUnit\Framework\TestCase
         $vertex = $mvp->multiplyVec4(new Vec4(0, 0, 0, 1));
         $this->assertEquals([3.5478, 0, -2.2042, -2], array_map(function($v) {return round($v, 4);}, $vertex->raw()));
     }
+
+    public function testInverse()
+    {
+        $m = new Mat4;
+        $m->inverse();
+
+        $this->assertEquals(
+        [
+            1.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
+        ], array_map(function($v) {return round($v, 4);}, $m->raw()));
+
+        $m->translate(new Vec3(2, 5, 1));
+
+        $this->assertEquals(
+        [
+            1.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            2.0, 5.0, 1.0, 1.0
+        ], array_map(function($v) {return round($v, 4);}, $m->raw()));
+
+        $m->inverse();
+
+        $this->assertEquals(
+        [
+            1.0, 0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            -2.0, -5.0, -1.0, 1.0
+        ], array_map(function($v) {return round($v, 4);}, $m->raw()));
+    }
 }
