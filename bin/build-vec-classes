@@ -260,6 +260,45 @@ $buffer .= <<<EOD
 EOD;
 
     /**
+     * Clamp function
+     * 
+     * ---------------------------------
+     */
+    $functionCode = codeGenPerProperty($properties, 
+        "        \$result->{{p}} = max(min(\$vector->{{p}}, 1.0), 0.0);\n"
+    );
+
+$buffer .= <<<EOD
+
+    /**
+     * Clamp the given vector
+     *
+     * @param {$name}           \$vector The vector to base the clamp on.
+     * @param {$name}|null      \$result The vector the result is written to.
+     *
+     * @return {$name}                   The result vector. 
+     */
+    public static function _clamp({$name} \$vector, ?{$name} &\$result = null) : {$name}
+    {
+        {$codeMakeResultIfNot}
+
+{$functionCode}
+        return \$result;
+    }
+
+    /**
+     * Clamp the current vector
+     *
+     * @return self
+     */
+    public function clamp()
+    {
+        {$name}::_clamp(\$this, \$this); return \$this;
+    }\n
+EOD;
+
+
+    /**
      * Dot product
      * 
      * ---------------------------------
@@ -442,6 +481,42 @@ EOD;
     }\n
 EOD;
 
+    /**
+     * Multiply Vec function
+     * 
+     * ---------------------------------
+     */
+    $functionCode = codeGenSimpleLeftRight($properties, '*');
+    $buffer .= <<<EOD
+    
+    /**
+     *  Multiply a vector by another vector
+     *
+     * @param {$name}           \$left
+     * @param {$dataType}       \$value
+     * @param {$name}|null      \$result The vector the result is written to.
+     *
+     * @return {$name}                   The result vector. 
+     */
+    public static function _multiply{$name}({$name} \$left, {$name} \$right, ?{$name} &\$result = null)
+    {
+        {$codeMakeResultIfNot}
+        
+{$functionCode}
+        return \$result;
+    }
+
+    /**
+     * Multiply the current vector by another vector
+     *
+     * @param {$dataType}       \$value
+     * @return self
+     */
+    public function multiply{$name}({$name} \$right)
+    {
+        {$name}::_multiply{$name}(\$this, \$right, \$this); return \$this;
+    }\n
+EOD;
     /**
      * Divide function
      * 

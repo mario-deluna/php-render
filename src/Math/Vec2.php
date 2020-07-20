@@ -77,6 +77,34 @@ class Vec2
     {
         Vec2::_normalize($this, $this); return $this;
     }
+
+    /**
+     * Clamp the given vector
+     *
+     * @param Vec2           $vector The vector to base the clamp on.
+     * @param Vec2|null      $result The vector the result is written to.
+     *
+     * @return Vec2                   The result vector. 
+     */
+    public static function _clamp(Vec2 $vector, ?Vec2 &$result = null) : Vec2
+    {
+        if (is_null($result)) $result = new Vec2(0, 0);
+
+        $result->x = max(min($vector->x, 1.0), 0.0);
+        $result->y = max(min($vector->y, 1.0), 0.0);
+
+        return $result;
+    }
+
+    /**
+     * Clamp the current vector
+     *
+     * @return self
+     */
+    public function clamp()
+    {
+        Vec2::_clamp($this, $this); return $this;
+    }
     
     /**
      * Dot Product
@@ -216,6 +244,36 @@ class Vec2
     public function multiply(float $value)
     {
         Vec2::_multiply($this, $value, $this); return $this;
+    }
+    
+    /**
+     *  Multiply a vector by another vector
+     *
+     * @param Vec2           $left
+     * @param float       $value
+     * @param Vec2|null      $result The vector the result is written to.
+     *
+     * @return Vec2                   The result vector. 
+     */
+    public static function _multiplyVec2(Vec2 $left, Vec2 $right, ?Vec2 &$result = null)
+    {
+        if (is_null($result)) $result = new Vec2(0, 0);
+        
+        $result->x = $left->x * $right->x;
+        $result->y = $left->y * $right->y;
+
+        return $result;
+    }
+
+    /**
+     * Multiply the current vector by another vector
+     *
+     * @param float       $value
+     * @return self
+     */
+    public function multiplyVec2(Vec2 $right)
+    {
+        Vec2::_multiplyVec2($this, $right, $this); return $this;
     }
     
     /**

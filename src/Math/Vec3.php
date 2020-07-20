@@ -99,6 +99,35 @@ class Vec3
     {
         Vec3::_normalize($this, $this); return $this;
     }
+
+    /**
+     * Clamp the given vector
+     *
+     * @param Vec3           $vector The vector to base the clamp on.
+     * @param Vec3|null      $result The vector the result is written to.
+     *
+     * @return Vec3                   The result vector. 
+     */
+    public static function _clamp(Vec3 $vector, ?Vec3 &$result = null) : Vec3
+    {
+        if (is_null($result)) $result = new Vec3(0, 0, 0);
+
+        $result->x = max(min($vector->x, 1.0), 0.0);
+        $result->y = max(min($vector->y, 1.0), 0.0);
+        $result->z = max(min($vector->z, 1.0), 0.0);
+
+        return $result;
+    }
+
+    /**
+     * Clamp the current vector
+     *
+     * @return self
+     */
+    public function clamp()
+    {
+        Vec3::_clamp($this, $this); return $this;
+    }
     
     /**
      * Dot Product
@@ -242,6 +271,37 @@ class Vec3
     public function multiply(float $value)
     {
         Vec3::_multiply($this, $value, $this); return $this;
+    }
+    
+    /**
+     *  Multiply a vector by another vector
+     *
+     * @param Vec3           $left
+     * @param float       $value
+     * @param Vec3|null      $result The vector the result is written to.
+     *
+     * @return Vec3                   The result vector. 
+     */
+    public static function _multiplyVec3(Vec3 $left, Vec3 $right, ?Vec3 &$result = null)
+    {
+        if (is_null($result)) $result = new Vec3(0, 0, 0);
+        
+        $result->x = $left->x * $right->x;
+        $result->y = $left->y * $right->y;
+        $result->z = $left->z * $right->z;
+
+        return $result;
+    }
+
+    /**
+     * Multiply the current vector by another vector
+     *
+     * @param float       $value
+     * @return self
+     */
+    public function multiplyVec3(Vec3 $right)
+    {
+        Vec3::_multiplyVec3($this, $right, $this); return $this;
     }
     
     /**

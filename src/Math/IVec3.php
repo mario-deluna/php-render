@@ -99,6 +99,35 @@ class IVec3
     {
         IVec3::_normalize($this, $this); return $this;
     }
+
+    /**
+     * Clamp the given vector
+     *
+     * @param IVec3           $vector The vector to base the clamp on.
+     * @param IVec3|null      $result The vector the result is written to.
+     *
+     * @return IVec3                   The result vector. 
+     */
+    public static function _clamp(IVec3 $vector, ?IVec3 &$result = null) : IVec3
+    {
+        if (is_null($result)) $result = new IVec3(0, 0, 0);
+
+        $result->x = max(min($vector->x, 1.0), 0.0);
+        $result->y = max(min($vector->y, 1.0), 0.0);
+        $result->z = max(min($vector->z, 1.0), 0.0);
+
+        return $result;
+    }
+
+    /**
+     * Clamp the current vector
+     *
+     * @return self
+     */
+    public function clamp()
+    {
+        IVec3::_clamp($this, $this); return $this;
+    }
     
     /**
      * Dot Product
@@ -242,6 +271,37 @@ class IVec3
     public function multiply(int $value)
     {
         IVec3::_multiply($this, $value, $this); return $this;
+    }
+    
+    /**
+     *  Multiply a vector by another vector
+     *
+     * @param IVec3           $left
+     * @param int       $value
+     * @param IVec3|null      $result The vector the result is written to.
+     *
+     * @return IVec3                   The result vector. 
+     */
+    public static function _multiplyIVec3(IVec3 $left, IVec3 $right, ?IVec3 &$result = null)
+    {
+        if (is_null($result)) $result = new IVec3(0, 0, 0);
+        
+        $result->x = $left->x * $right->x;
+        $result->y = $left->y * $right->y;
+        $result->z = $left->z * $right->z;
+
+        return $result;
+    }
+
+    /**
+     * Multiply the current vector by another vector
+     *
+     * @param int       $value
+     * @return self
+     */
+    public function multiplyIVec3(IVec3 $right)
+    {
+        IVec3::_multiplyIVec3($this, $right, $this); return $this;
     }
     
     /**

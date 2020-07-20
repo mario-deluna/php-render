@@ -121,6 +121,36 @@ class IVec4
     {
         IVec4::_normalize($this, $this); return $this;
     }
+
+    /**
+     * Clamp the given vector
+     *
+     * @param IVec4           $vector The vector to base the clamp on.
+     * @param IVec4|null      $result The vector the result is written to.
+     *
+     * @return IVec4                   The result vector. 
+     */
+    public static function _clamp(IVec4 $vector, ?IVec4 &$result = null) : IVec4
+    {
+        if (is_null($result)) $result = new IVec4(0, 0, 0, 0);
+
+        $result->x = max(min($vector->x, 1.0), 0.0);
+        $result->y = max(min($vector->y, 1.0), 0.0);
+        $result->z = max(min($vector->z, 1.0), 0.0);
+        $result->w = max(min($vector->w, 1.0), 0.0);
+
+        return $result;
+    }
+
+    /**
+     * Clamp the current vector
+     *
+     * @return self
+     */
+    public function clamp()
+    {
+        IVec4::_clamp($this, $this); return $this;
+    }
     
     /**
      * Dot Product
@@ -268,6 +298,38 @@ class IVec4
     public function multiply(int $value)
     {
         IVec4::_multiply($this, $value, $this); return $this;
+    }
+    
+    /**
+     *  Multiply a vector by another vector
+     *
+     * @param IVec4           $left
+     * @param int       $value
+     * @param IVec4|null      $result The vector the result is written to.
+     *
+     * @return IVec4                   The result vector. 
+     */
+    public static function _multiplyIVec4(IVec4 $left, IVec4 $right, ?IVec4 &$result = null)
+    {
+        if (is_null($result)) $result = new IVec4(0, 0, 0, 0);
+        
+        $result->x = $left->x * $right->x;
+        $result->y = $left->y * $right->y;
+        $result->z = $left->z * $right->z;
+        $result->w = $left->w * $right->w;
+
+        return $result;
+    }
+
+    /**
+     * Multiply the current vector by another vector
+     *
+     * @param int       $value
+     * @return self
+     */
+    public function multiplyIVec4(IVec4 $right)
+    {
+        IVec4::_multiplyIVec4($this, $right, $this); return $this;
     }
     
     /**
