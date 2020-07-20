@@ -70,6 +70,7 @@ public function fragment(array &$in, array &$out)
 }
 ```
 
+---
 ### Basic Cube
 
 Just a simple cube showcasing 3D geometry with depth testing.
@@ -84,6 +85,7 @@ $ php examples/02_cube_basic/cube.php
 | ![Cube Lines](examples/02_cube_basic/image_lines.tga.png?raw=true) | ![Cube Depth](examples/02_cube_basic/image_depth.tga.png?raw=true) | ![Cube Color](examples/02_cube_basic/image.tga.png?raw=true) |
 |---------------------------------------------|---------------------------------------------|---------------------------------------|
 
+---
 ### Cube Video
 
 Showcasing a simple example how to use the ffmpeg stream to create videos with php-render.
@@ -97,6 +99,7 @@ $ php examples/02_cube_video/cube.php
 | ![Cube Lines](examples/03_cube_video/video.gif?raw=true) |
 |-----------------------------------|
 
+---
 ### Basic Model Loading 
 
 This example shows how to load a model from an `obj` file.
@@ -110,6 +113,7 @@ $ php examples/04_simple_model/model.php
 | ![Model Lines](examples/04_simple_model/image_lines.tga.png?raw=true) | ![Model Depth](examples/04_simple_model/image_depth.tga.png?raw=true) | ![Model Color](examples/04_simple_model/image.tga.png?raw=true) |
 |---------------------------------------------|---------------------------------------------|---------------------------------------|
 
+---
 ### Model With Texture Sampling
 
 Showcases basic texture sampling of a loaded model.
@@ -124,6 +128,7 @@ $ php examples/05_texture_sampling/model.php
 | ![Model Lines](examples/05_texture_sampling/image_lines.tga.png?raw=true) | ![Model Depth](examples/05_texture_sampling/image_depth.tga.png?raw=true) | ![Model Color](examples/05_texture_sampling/image.tga.jpg?raw=true) |
 |---------------------------------------------|---------------------------------------------|---------------------------------------|
 
+---
 ## Credits
 
 - [Mario Döring](https://github.com/mario-deluna)

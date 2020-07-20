@@ -13,7 +13,7 @@ foreach($readme as $file)
     $content = preg_replace("/\(([a-zA-z_]+\.tga\.jpg)/", '('.$expath.'/$1', $content);
     $content = preg_replace("/\(([a-zA-z_]+\.gif)/", '('.$expath.'/$1', $content);
 
-    $buffer .= PHP_EOL . $content;
+    $buffer .= PHP_EOL . $content . PHP_EOL . '---';
 }
 
 // read the readme 
