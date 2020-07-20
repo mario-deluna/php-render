@@ -20,10 +20,10 @@ class Buffer2DTest extends \PHPUnit\Framework\TestCase
     public function testBufferType()
     {
         $buffer = new Buffer2D(Buffer2D::TYPE_INT, 5, 5);   
-        $this->assertInternalType('int', $buffer->getBufferObject()->raw()[0]);
+        $this->assertIsInt($buffer->getBufferObject()->raw()[0]);
 
         $buffer = new Buffer2D(Buffer2D::TYPE_DOUBLE, 5, 5);   
-        $this->assertInternalType('double', $buffer->getBufferObject()->raw()[0]);
+        $this->assertIsFloat($buffer->getBufferObject()->raw()[0]);
     }
 
     public function testGetAtIndex()
