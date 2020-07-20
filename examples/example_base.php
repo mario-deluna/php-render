@@ -9,7 +9,13 @@ use PHPR\{
 
 define('EXAMPLE_RENDER_WIDTH', 800);
 define('EXAMPLE_RENDER_HEIGHT', 600);
+// define('EXAMPLE_RENDER_WIDTH', 1280);
+// define('EXAMPLE_RENDER_HEIGHT', 720);
+// define('EXAMPLE_RENDER_WIDTH', 360);
+// define('EXAMPLE_RENDER_HEIGHT', 240);
 define('EXAMPLE_RENDER_ASPECT_RATIO', EXAMPLE_RENDER_WIDTH / EXAMPLE_RENDER_HEIGHT);
+define('EXAMPLE_RES_DIR', __DIR__ . '/../example-resources');
+define('EXAMPLE_MODEL_DIR', EXAMPLE_RES_DIR . '/models');
 
 /**
  * Creates example context
