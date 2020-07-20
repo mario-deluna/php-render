@@ -94,7 +94,7 @@ class Rasterizer
             //     $pixels[] = $y1;
             // }
             
-            if ($y1 > 0)
+            if ($y1 >= 0)
             {   
                 $pixels[] = min(max($x1, 0), $this->width - 1);
                 $pixels[] = min(max($y1, 0), $this->height - 1);
