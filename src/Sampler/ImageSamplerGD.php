@@ -24,7 +24,11 @@ class ImageSamplerGD
 
     public function sample(float $x, float $y) : int
     {
-        return imagecolorat($this->resource, $this->width * $x, $this->height * $y);
+        return imagecolorat(
+            $this->resource, 
+            min(max($this->width * $x, 0), $this->width - 1), 
+            min(max($this->height * $y, 0), $this->height - 1)
+        );
     }
 
     public function sampleVec3(float $x, float $y) : Vec3
