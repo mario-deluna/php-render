@@ -155,7 +155,7 @@ $ php examples/10_phong/model.php
 ```
 
 
-| ![Model Depth](examples/10_phong/image_depth.tga.png?raw=true) | ![Model Color](examples/10_phong/image.tga.png?raw=true)     | ![Video](examples/10_phong/image.tga.jpg?raw=true)      |
+| ![Model Depth](examples/10_phong/image_depth.tga.png?raw=true) | ![Model Color](examples/10_phong/image.tga.png?raw=true)      | ![Video](examples/10_phong/video.gif?raw=true)          |
 |----------------------------------------------|---------------------------------------------|---------------------------------------|
 
 ---
