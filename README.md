@@ -43,6 +43,18 @@ I should also note I'm still nowhere near an expert in the field.
 
 When I started with programming, I often encountered parts of computer science that seemed super interesting and I wanted to learn more about them. But not having examples/tutorials in a language I was familiar with got me overwhelmed fast. This is an issue that fades away after years in the industry but I still remember the frustration. Long story short I hope this project helps someone learning something new. 
 
+## Usage
+
+Everything should be up and running, this renderer is implemented entirely in PHP so there are no special extension requirements or other dependencies.
+
+Composer is used for autoloading so you will have to run a `composer install`.
+
+Some examples make use of some assets (3d model, textures etc.) There is script which will download and extract these:
+
+```
+./bin/download-example-resources
+```
+
 ## Examples
 
 ### Interpolartion Triangle 
@@ -130,6 +142,21 @@ $ php examples/05_texture_sampling/model.php
 
 | ![Model Lines](examples/05_texture_sampling/image_lines.tga.png?raw=true) | ![Model Depth](examples/05_texture_sampling/image_depth.tga.png?raw=true) | ![Model Color](examples/05_texture_sampling/image.tga.jpg?raw=true) |
 |---------------------------------------------|---------------------------------------------|---------------------------------------|
+
+---
+### Model with Phong Shading
+
+Showcases simple phong shading on a 3D Model
+
+[Example Source](examples/10_phong/)
+
+```
+$ php examples/10_phong/model.php
+```
+
+
+| ![Model Depth](examples/10_phong/image_depth.tga.png?raw=true) | ![Model Color](examples/10_phong/image.tga.png?raw=true)     | ![Video](examples/10_phong/image.tga.jpg?raw=true)      |
+|----------------------------------------------|---------------------------------------------|---------------------------------------|
 
 ---
 ## Credits
