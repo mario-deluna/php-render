@@ -83,7 +83,7 @@ class IVec4
     /**
      * Normalize the given vector
      *
-     * @param IVec4           $vector The vector to base the normalization on.
+     * @param IVec4           $vector The vector to base the absoultes on.
      * @param IVec4|null      $result The vector the result is written to.
      *
      * @return IVec4                   The result vector. 
@@ -120,6 +120,37 @@ class IVec4
     public function normalize()
     {
         IVec4::_normalize($this, $this); return $this;
+    }
+
+    /**
+     * Absolute of the given vector
+     *
+     * @param IVec4           $vector The vector to base the normalization on.
+     * @param IVec4|null      $result The vector the result is written to.
+     *
+     * @return IVec4                   The result vector. 
+     */
+    public static function _abs(IVec4 $vector, ?IVec4 &$result = null) : IVec4
+    {
+        if (is_null($result)) $result = new IVec4(0, 0, 0, 0);
+
+        $result->x = abs($vector->x);
+        $result->y = abs($vector->y);
+        $result->z = abs($vector->z);
+        $result->w = abs($vector->w);
+
+
+        return $result;
+    }
+
+    /**
+     * Absolute of the current vector
+     *
+     * @return self
+     */
+    public function abs()
+    {
+        IVec4::_abs($this, $this); return $this;
     }
 
     /**
@@ -384,5 +415,25 @@ class IVec4
     public function raw() : array
     {
         return [$this->x, $this->y, $this->z, $this->w];
+    }
+
+    /**
+     * Just copy the vector values to a new object
+     *
+     * @return IVec4
+     */
+    public function copy() : IVec4
+    {
+        return new IVec4($this->x, $this->y, $this->z, $this->w);
+    }
+
+    /**
+     * Prtint the vector in human friendly way
+     *
+     * @return string
+     */
+    public function __toString() : string
+    {
+        return "IVec4({$this->x}, {$this->y}, {$this->z}, {$this->w})";
     }
 }

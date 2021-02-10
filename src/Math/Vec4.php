@@ -83,7 +83,7 @@ class Vec4
     /**
      * Normalize the given vector
      *
-     * @param Vec4           $vector The vector to base the normalization on.
+     * @param Vec4           $vector The vector to base the absoultes on.
      * @param Vec4|null      $result The vector the result is written to.
      *
      * @return Vec4                   The result vector. 
@@ -120,6 +120,37 @@ class Vec4
     public function normalize()
     {
         Vec4::_normalize($this, $this); return $this;
+    }
+
+    /**
+     * Absolute of the given vector
+     *
+     * @param Vec4           $vector The vector to base the normalization on.
+     * @param Vec4|null      $result The vector the result is written to.
+     *
+     * @return Vec4                   The result vector. 
+     */
+    public static function _abs(Vec4 $vector, ?Vec4 &$result = null) : Vec4
+    {
+        if (is_null($result)) $result = new Vec4(0, 0, 0, 0);
+
+        $result->x = abs($vector->x);
+        $result->y = abs($vector->y);
+        $result->z = abs($vector->z);
+        $result->w = abs($vector->w);
+
+
+        return $result;
+    }
+
+    /**
+     * Absolute of the current vector
+     *
+     * @return self
+     */
+    public function abs()
+    {
+        Vec4::_abs($this, $this); return $this;
     }
 
     /**
@@ -384,5 +415,25 @@ class Vec4
     public function raw() : array
     {
         return [$this->x, $this->y, $this->z, $this->w];
+    }
+
+    /**
+     * Just copy the vector values to a new object
+     *
+     * @return Vec4
+     */
+    public function copy() : Vec4
+    {
+        return new Vec4($this->x, $this->y, $this->z, $this->w);
+    }
+
+    /**
+     * Prtint the vector in human friendly way
+     *
+     * @return string
+     */
+    public function __toString() : string
+    {
+        return "Vec4({$this->x}, {$this->y}, {$this->z}, {$this->w})";
     }
 }

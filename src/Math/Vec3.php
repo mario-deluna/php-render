@@ -63,7 +63,7 @@ class Vec3
     /**
      * Normalize the given vector
      *
-     * @param Vec3           $vector The vector to base the normalization on.
+     * @param Vec3           $vector The vector to base the absoultes on.
      * @param Vec3|null      $result The vector the result is written to.
      *
      * @return Vec3                   The result vector. 
@@ -98,6 +98,36 @@ class Vec3
     public function normalize()
     {
         Vec3::_normalize($this, $this); return $this;
+    }
+
+    /**
+     * Absolute of the given vector
+     *
+     * @param Vec3           $vector The vector to base the normalization on.
+     * @param Vec3|null      $result The vector the result is written to.
+     *
+     * @return Vec3                   The result vector. 
+     */
+    public static function _abs(Vec3 $vector, ?Vec3 &$result = null) : Vec3
+    {
+        if (is_null($result)) $result = new Vec3(0, 0, 0);
+
+        $result->x = abs($vector->x);
+        $result->y = abs($vector->y);
+        $result->z = abs($vector->z);
+
+
+        return $result;
+    }
+
+    /**
+     * Absolute of the current vector
+     *
+     * @return self
+     */
+    public function abs()
+    {
+        Vec3::_abs($this, $this); return $this;
     }
 
     /**
@@ -388,5 +418,25 @@ class Vec3
     public function raw() : array
     {
         return [$this->x, $this->y, $this->z];
+    }
+
+    /**
+     * Just copy the vector values to a new object
+     *
+     * @return Vec3
+     */
+    public function copy() : Vec3
+    {
+        return new Vec3($this->x, $this->y, $this->z);
+    }
+
+    /**
+     * Prtint the vector in human friendly way
+     *
+     * @return string
+     */
+    public function __toString() : string
+    {
+        return "Vec3({$this->x}, {$this->y}, {$this->z})";
     }
 }

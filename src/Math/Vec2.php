@@ -43,7 +43,7 @@ class Vec2
     /**
      * Normalize the given vector
      *
-     * @param Vec2           $vector The vector to base the normalization on.
+     * @param Vec2           $vector The vector to base the absoultes on.
      * @param Vec2|null      $result The vector the result is written to.
      *
      * @return Vec2                   The result vector. 
@@ -76,6 +76,35 @@ class Vec2
     public function normalize()
     {
         Vec2::_normalize($this, $this); return $this;
+    }
+
+    /**
+     * Absolute of the given vector
+     *
+     * @param Vec2           $vector The vector to base the normalization on.
+     * @param Vec2|null      $result The vector the result is written to.
+     *
+     * @return Vec2                   The result vector. 
+     */
+    public static function _abs(Vec2 $vector, ?Vec2 &$result = null) : Vec2
+    {
+        if (is_null($result)) $result = new Vec2(0, 0);
+
+        $result->x = abs($vector->x);
+        $result->y = abs($vector->y);
+
+
+        return $result;
+    }
+
+    /**
+     * Absolute of the current vector
+     *
+     * @return self
+     */
+    public function abs()
+    {
+        Vec2::_abs($this, $this); return $this;
     }
 
     /**
@@ -326,5 +355,25 @@ class Vec2
     public function raw() : array
     {
         return [$this->x, $this->y];
+    }
+
+    /**
+     * Just copy the vector values to a new object
+     *
+     * @return Vec2
+     */
+    public function copy() : Vec2
+    {
+        return new Vec2($this->x, $this->y);
+    }
+
+    /**
+     * Prtint the vector in human friendly way
+     *
+     * @return string
+     */
+    public function __toString() : string
+    {
+        return "Vec2({$this->x}, {$this->y})";
     }
 }

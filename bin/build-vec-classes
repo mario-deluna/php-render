@@ -227,7 +227,7 @@ $buffer .= <<<EOD
     /**
      * Normalize the given vector
      *
-     * @param {$name}           \$vector The vector to base the normalization on.
+     * @param {$name}           \$vector The vector to base the absoultes on.
      * @param {$name}|null      \$result The vector the result is written to.
      *
      * @return {$name}                   The result vector. 
@@ -256,6 +256,44 @@ $buffer .= <<<EOD
     public function normalize()
     {
         {$name}::_normalize(\$this, \$this); return \$this;
+    }\n
+EOD;
+
+    /**
+     * abs function
+     * 
+     * ---------------------------------
+     */
+    $functionCode = codeGenPerProperty($properties, 
+        "        \$result->{{p}} = abs(\$vector->{{p}});\n"
+    );
+$buffer .= <<<EOD
+
+    /**
+     * Absolute of the given vector
+     *
+     * @param {$name}           \$vector The vector to base the normalization on.
+     * @param {$name}|null      \$result The vector the result is written to.
+     *
+     * @return {$name}                   The result vector. 
+     */
+    public static function _abs({$name} \$vector, ?{$name} &\$result = null) : {$name}
+    {
+        {$codeMakeResultIfNot}
+
+{$functionCode}
+
+        return \$result;
+    }
+
+    /**
+     * Absolute of the current vector
+     *
+     * @return self
+     */
+    public function abs()
+    {
+        {$name}::_abs(\$this, \$this); return \$this;
     }\n
 EOD;
 
@@ -649,7 +687,50 @@ $buffer .= <<<EOD
         return [{$rawPropString}];
     }\n
 EOD;
-    
+
+    /**
+     * Copy
+     * 
+     * ---------------------------------
+     */
+    $rawPropString = implode(', ', array_map(function($p) use($dataType) {
+        return "\$this->{$p}";
+    }, $properties));
+
+$buffer .= <<<EOD
+
+    /**
+     * Just copy the vector values to a new object
+     *
+     * @return {$name}
+     */
+    public function copy() : {$name}
+    {
+        return new {$name}({$rawPropString});
+    }\n
+EOD;
+
+    /**
+     * print / toString
+     * 
+     * ---------------------------------
+     */
+    $rawPropString = implode(', ', array_map(function($p) use($dataType) {
+        return "{\$this->{$p}}";
+    }, $properties));
+
+$buffer .= <<<EOD
+
+    /**
+     * Prtint the vector in human friendly way
+     *
+     * @return string
+     */
+    public function __toString() : string
+    {
+        return "{$name}({$rawPropString})";
+    }\n
+EOD;
 
     /**
      * Write file
