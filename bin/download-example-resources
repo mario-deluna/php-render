@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# remove old resources
+rm -R example-resources
+
+# download the resources
+curl https://github.com/mario-deluna/php-render-example-resources/archive/master.zip -L -o example-resources.zip
+
+# unzip 
+unzip example-resources.zip
+mv php-render-example-resources-master example-resources
+
+# remove zip 
+rm example-resources.zip
