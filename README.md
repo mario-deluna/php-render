@@ -105,10 +105,10 @@ $ php examples/02_cube_basic/cube.php
 
 Showcasing a simple example how to use the ffmpeg stream to create videos with php-render.
 
-[Example Source](examples/02_cube_video/)
+[Example Source](examples/03_cube_video/)
 
 ```
-$ php examples/02_cube_video/cube.php
+$ php examples/03_cube_video/cube.php
 ```
 
 | ![Cube Lines](examples/03_cube_video/video.gif?raw=true) |
