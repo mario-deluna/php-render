@@ -9,8 +9,7 @@ A 3D Software renderer in pure PHP.
  * Supports Multiple Output Buffers per context.
  * CG Math Library.
  * ObJ File Parser.
- * Render to a mp4 video (requires ffmpeg)
- * No "pure php" cheating with FFI.
+ * There is an FFmpeg wrapper to easly combine multiple frames into a MP4 video. (This obviously requires ffmpeg...)
 
 ## Table of Contents
 
