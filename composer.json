@@ -2,8 +2,7 @@
     "name": "mario-deluna/php-render",
     "authors": [
         {
-            "name": "Mario Döring",
-            "email": "mario@clancats.com"
+            "name": "Mario Döring"
         }
     ],
     "require": {
